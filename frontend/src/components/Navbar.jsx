@@ -24,19 +24,20 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
             width: '2.5rem',
             height: '2.5rem',
             borderRadius: '10px',
-            background: 'linear-gradient(135deg, #6366f1, #06b6d4)',
+            background: 'linear-gradient(135deg, #5E3122, #a8543b)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 0 15px rgba(99, 102, 241, 0.4)'
+            boxShadow: '0 0 16px rgba(94, 49, 34, 0.6)',
+            border: '1px solid rgba(199, 111, 81, 0.4)'
           }}>
             <Terminal size={22} color="#ffffff" />
           </div>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.25rem', letterSpacing: '-0.02em', background: 'linear-gradient(to right, #ffffff, #c7d2fe)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            <div style={{ fontWeight: 800, fontSize: '1.25rem', letterSpacing: '-0.02em', background: 'linear-gradient(to right, #fbf7f4, #e59866)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               Coding Guru
             </div>
-            <div style={{ fontSize: '0.68rem', color: '#818cf8', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '0.68rem', color: '#c76f51', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
               10-Test Engine
             </div>
           </div>
@@ -47,7 +48,7 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
           <button
             onClick={() => setView('problems')}
             className={`btn ${currentView === 'problems' ? 'btn-secondary' : ''}`}
-            style={{ color: currentView === 'problems' ? '#ffffff' : 'var(--text-secondary)' }}
+            style={{ color: currentView === 'problems' ? '#fbf7f4' : 'var(--text-secondary)' }}
           >
             <Code2 size={16} />
             Problem Library
@@ -58,8 +59,8 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
               onClick={() => setView('admin')}
               className={`btn ${currentView === 'admin' ? 'btn-secondary' : ''}`}
               style={{
-                color: currentView === 'admin' ? '#c084fc' : 'var(--text-secondary)',
-                border: currentView === 'admin' ? '1px solid rgba(168, 85, 247, 0.4)' : 'none'
+                color: currentView === 'admin' ? '#e59866' : 'var(--text-secondary)',
+                border: currentView === 'admin' ? '1px solid rgba(199, 111, 81, 0.4)' : 'none'
               }}
             >
               <Shield size={16} />
@@ -88,12 +89,13 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
                   width: '2.1rem',
                   height: '2.1rem',
                   borderRadius: '50%',
-                  background: user.role === 'admin' ? 'linear-gradient(135deg, #a855f7, #ec4899)' : 'linear-gradient(135deg, #3b82f6, #6366f1)',
+                  background: user.role === 'admin' ? 'linear-gradient(135deg, #5E3122, #a8543b)' : 'linear-gradient(135deg, #733c2a, #c76f51)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontWeight: 700,
-                  fontSize: '0.85rem'
+                  fontSize: '0.85rem',
+                  border: '1px solid rgba(199, 111, 81, 0.3)'
                 }}>
                   {user.name ? user.name[0].toUpperCase() : 'U'}
                 </div>
@@ -131,7 +133,7 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
                 style={{
                   fontSize: '0.825rem',
                   padding: '0.5rem 1rem',
-                  background: 'linear-gradient(135deg, #8b5cf6, #d946ef)'
+                  background: 'linear-gradient(135deg, #5E3122, #9e4f35)'
                 }}
               >
                 <Shield size={15} />

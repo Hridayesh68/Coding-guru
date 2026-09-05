@@ -132,10 +132,11 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
               width: '2.2rem',
               height: '2.2rem',
               borderRadius: '8px',
-              background: 'linear-gradient(135deg, #a855f7, #ec4899)',
+              background: 'linear-gradient(135deg, #5E3122, #a8543b)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              border: '1px solid rgba(199, 111, 81, 0.4)'
             }}>
               <Shield size={17} color="#fff" />
             </div>
@@ -401,7 +402,7 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
               type="submit"
               disabled={loading}
               className="btn btn-primary"
-              style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)' }}
+              style={{ background: 'linear-gradient(135deg, #5E3122, #9e4f35)', border: '1px solid rgba(199, 111, 81, 0.4)' }}
             >
               {loading ? 'Saving Question...' : questionToEdit ? 'Save Changes' : 'Publish Question (10 Test Cases)'}
             </button>

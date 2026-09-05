@@ -49,14 +49,14 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
           gap: '0.5rem',
           padding: '0.4rem 1rem',
           borderRadius: '9999px',
-          background: 'rgba(99, 102, 241, 0.1)',
-          border: '1px solid rgba(99, 102, 241, 0.25)',
-          color: '#a5b4fc',
+          background: 'rgba(94, 49, 34, 0.25)',
+          border: '1px solid rgba(199, 111, 81, 0.35)',
+          color: '#e59866',
           fontSize: '0.825rem',
           fontWeight: 600,
           marginBottom: '1.25rem'
         }}>
-          <Sparkles size={15} color="#818cf8" />
+          <Sparkles size={15} color="#c76f51" />
           Rigorous 10 Test Cases Per Problem
         </div>
 
@@ -66,7 +66,7 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
           letterSpacing: '-0.03em',
           lineHeight: 1.2,
           marginBottom: '1rem',
-          background: 'linear-gradient(to right, #ffffff, #c7d2fe, #818cf8)',
+          background: 'linear-gradient(to right, #ffffff, #edd6ca, #c76f51)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent'
         }}>
@@ -80,7 +80,7 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
           fontSize: '1.05rem',
           lineHeight: 1.6
         }}>
-          Solve high-impact coding challenges in JavaScript or Python. Every submission is rigorously evaluated against <strong>10 comprehensive test cases</strong> to guarantee full edge-case coverage.
+          Solve coding challenges in <strong>C++, Java, Python, or JavaScript</strong>. Every submission is rigorously evaluated against <strong>10 comprehensive test cases</strong> to guarantee full edge-case coverage.
         </p>
 
         {/* Highlight Stats Strip */}
@@ -94,15 +94,15 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
         }}>
           <div className="glass-panel" style={{ padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Total Questions</div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f3f4f6' }}>{questions.length}</div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#fbf7f4' }}>{questions.length}</div>
           </div>
           <div className="glass-panel" style={{ padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Evaluation Engine</div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#38bdf8' }}>10 Cases</div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#e59866' }}>10 Cases</div>
           </div>
           <div className="glass-panel" style={{ padding: '1rem 1.25rem' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Languages</div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a855f7' }}>JS & Python</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Supported Languages</div>
+            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#c76f51' }}>JS, Py, C++, Java</div>
           </div>
           <div className="glass-panel" style={{ padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Your Solved</div>

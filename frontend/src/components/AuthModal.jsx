@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Mail, User, Shield, KeyRound, ArrowRight, Sparkles, Check } from 'lucide-react';
+import { X, Lock, Mail, User, Shield, KeyRound, ArrowRight, Sparkles } from 'lucide-react';
 import { api } from '../utils/api';
 import { saveAuth } from '../utils/auth';
 
@@ -83,17 +83,18 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
           justifyContent: 'space-between',
           padding: '1.25rem 1.5rem',
           borderBottom: '1px solid var(--border-subtle)',
-          background: 'rgba(17, 23, 38, 0.6)'
+          background: 'rgba(23, 16, 13, 0.7)'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div style={{
               width: '2rem',
               height: '2rem',
               borderRadius: '8px',
-              background: activeTab === 'admin-login' ? 'linear-gradient(135deg, #a855f7, #ec4899)' : 'linear-gradient(135deg, #6366f1, #06b6d4)',
+              background: activeTab === 'admin-login' ? 'linear-gradient(135deg, #5E3122, #a8543b)' : 'linear-gradient(135deg, #733c2a, #c76f51)',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              border: '1px solid rgba(199, 111, 81, 0.3)'
             }}>
               {activeTab === 'admin-login' ? <Shield size={16} color="#fff" /> : <Lock size={16} color="#fff" />}
             </div>
@@ -131,6 +132,7 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
               textAlign: 'center',
               color: activeTab === 'user-login' ? '#ffffff' : 'var(--text-secondary)',
               background: activeTab === 'user-login' ? 'var(--primary)' : 'rgba(255,255,255,0.04)',
+              border: activeTab === 'user-login' ? '1px solid rgba(199, 111, 81, 0.4)' : '1px solid transparent',
               transition: 'all 0.2s'
             }}
           >
@@ -146,7 +148,8 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
               borderRadius: '8px',
               textAlign: 'center',
               color: activeTab === 'admin-login' ? '#ffffff' : 'var(--text-secondary)',
-              background: activeTab === 'admin-login' ? 'linear-gradient(135deg, #a855f7, #ec4899)' : 'rgba(255,255,255,0.04)',
+              background: activeTab === 'admin-login' ? 'linear-gradient(135deg, #5E3122, #a8543b)' : 'rgba(255,255,255,0.04)',
+              border: activeTab === 'admin-login' ? '1px solid rgba(199, 111, 81, 0.5)' : '1px solid transparent',
               transition: 'all 0.2s'
             }}
           >
@@ -162,7 +165,8 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
               borderRadius: '8px',
               textAlign: 'center',
               color: activeTab === 'register' ? '#ffffff' : 'var(--text-secondary)',
-              background: activeTab === 'register' ? '#2563eb' : 'rgba(255,255,255,0.04)',
+              background: activeTab === 'register' ? '#733c2a' : 'rgba(255,255,255,0.04)',
+              border: activeTab === 'register' ? '1px solid rgba(199, 111, 81, 0.4)' : '1px solid transparent',
               transition: 'all 0.2s'
             }}
           >
@@ -173,7 +177,7 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
         {/* Quick Demo Login Presets */}
         <div style={{ padding: '1rem 1.5rem 0' }}>
           <div style={{
-            background: 'rgba(15, 23, 42, 0.7)',
+            background: 'rgba(23, 16, 13, 0.8)',
             border: '1px dashed var(--border-subtle)',
             borderRadius: '8px',
             padding: '0.75rem',
@@ -181,7 +185,7 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
             flexDirection: 'column',
             gap: '0.5rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: '#a5b4fc', fontWeight: 600 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem', color: '#e59866', fontWeight: 600 }}>
               <Sparkles size={14} />
               Quick 1-Click Demo Logins:
             </div>
@@ -193,7 +197,7 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
                 className="btn btn-secondary"
                 style={{ padding: '0.4rem 0.6rem', fontSize: '0.75rem', justifyContent: 'flex-start' }}
               >
-                <User size={13} color="#60a5fa" />
+                <User size={13} color="#c76f51" />
                 Demo Coder
               </button>
               <button
@@ -201,9 +205,9 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
                 onClick={() => handleQuickLogin('admin')}
                 disabled={loading}
                 className="btn btn-secondary"
-                style={{ padding: '0.4rem 0.6rem', fontSize: '0.75rem', justifyContent: 'flex-start', borderColor: 'rgba(168, 85, 247, 0.3)' }}
+                style={{ padding: '0.4rem 0.6rem', fontSize: '0.75rem', justifyContent: 'flex-start', borderColor: 'rgba(199, 111, 81, 0.4)' }}
               >
-                <Shield size={13} color="#c084fc" />
+                <Shield size={13} color="#e59866" />
                 Demo Admin
               </button>
             </div>
@@ -256,8 +260,8 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
                       fontSize: '0.8rem',
                       border: '1px solid',
                       borderColor: registerRole === 'user' ? 'var(--primary)' : 'var(--border-subtle)',
-                      background: registerRole === 'user' ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
-                      color: registerRole === 'user' ? '#818cf8' : 'var(--text-secondary)'
+                      background: registerRole === 'user' ? 'rgba(94, 49, 34, 0.35)' : 'transparent',
+                      color: registerRole === 'user' ? '#e59866' : 'var(--text-secondary)'
                     }}
                   >
                     Coder Role
@@ -270,9 +274,9 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
                       borderRadius: '6px',
                       fontSize: '0.8rem',
                       border: '1px solid',
-                      borderColor: registerRole === 'admin' ? '#a855f7' : 'var(--border-subtle)',
-                      background: registerRole === 'admin' ? 'rgba(168, 85, 247, 0.15)' : 'transparent',
-                      color: registerRole === 'admin' ? '#c084fc' : 'var(--text-secondary)'
+                      borderColor: registerRole === 'admin' ? '#c76f51' : 'var(--border-subtle)',
+                      background: registerRole === 'admin' ? 'rgba(94, 49, 34, 0.45)' : 'transparent',
+                      color: registerRole === 'admin' ? '#fbf7f4' : 'var(--text-secondary)'
                     }}
                   >
                     Admin Role
@@ -292,7 +296,7 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
                       className="form-input"
                       style={{ paddingLeft: '2.2rem' }}
                     />
-                    <KeyRound size={15} color="#c084fc" style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)' }} />
+                    <KeyRound size={15} color="#c76f51" style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)' }} />
                   </div>
                 </div>
               )}
@@ -339,9 +343,11 @@ export default function AuthModal({ isOpen, onClose, initialRole = 'user', onSuc
               width: '100%',
               marginTop: '0.75rem',
               padding: '0.75rem',
-              background: activeTab === 'admin-login' ? 'linear-gradient(135deg, #a855f7, #ec4899)' : 'linear-gradient(135deg, #6366f1, #4f46e5)',
+              background: activeTab === 'admin-login' ? 'linear-gradient(135deg, #5E3122, #a8543b)' : 'linear-gradient(135deg, #5E3122, #85432e)',
+              border: '1px solid rgba(199, 111, 81, 0.4)',
               color: '#ffffff',
-              fontSize: '0.9rem'
+              fontSize: '0.9rem',
+              boxShadow: '0 4px 14px var(--primary-glow)'
             }}
           >
             {loading ? (

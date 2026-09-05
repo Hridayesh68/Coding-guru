@@ -75,15 +75,17 @@ export default function AdminDashboard({ onOpenCreateQuestion, onEditQuestion })
             width: '2.5rem',
             height: '2.5rem',
             borderRadius: '10px',
-            background: 'linear-gradient(135deg, #a855f7, #ec4899)',
+            background: 'linear-gradient(135deg, #5E3122, #a8543b)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            border: '1px solid rgba(199, 111, 81, 0.4)',
+            boxShadow: '0 0 15px rgba(94, 49, 34, 0.5)'
           }}>
             <Shield size={22} color="#ffffff" />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em' }}>
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, letterSpacing: '-0.02em', background: 'linear-gradient(to right, #fbf7f4, #e59866)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               Administrator Management Portal
             </h1>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
@@ -95,7 +97,7 @@ export default function AdminDashboard({ onOpenCreateQuestion, onEditQuestion })
         <button
           onClick={onOpenCreateQuestion}
           className="btn btn-primary"
-          style={{ background: 'linear-gradient(135deg, #a855f7, #ec4899)' }}
+          style={{ background: 'linear-gradient(135deg, #5E3122, #9e4f35)', border: '1px solid rgba(199, 111, 81, 0.4)' }}
         >
           <PlusCircle size={16} />
           Add Question (10 Test Cases)
