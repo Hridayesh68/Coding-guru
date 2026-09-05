@@ -4,17 +4,17 @@
       "id": "usr_admin_1",
       "name": "Site Administrator",
       "email": "admin@codingguru.com",
-      "passwordHash": "$2b$10$UZFIOfn09AfPcfwdODjlfO7Hd4gv7lQQNH2tcsB6cWQ48AANgXbCK",
+      "passwordHash": "$2b$10$GaCWxQeH6Tlxb49LWYb2fu0ofd0kMUKLPYCEhWXvwNRU9N3SIcrUS",
       "role": "admin",
-      "createdAt": "2026-09-05T17:11:16.017Z"
+      "createdAt": "2026-09-05T17:20:45.036Z"
     },
     {
       "id": "usr_coder_1",
       "name": "Alex Coder",
       "email": "coder@codingguru.com",
-      "passwordHash": "$2b$10$UZFIOfn09AfPcfwdODjlfOh.cz3LC.nnZjyGM8O7Evvl7aPDNwPKC",
+      "passwordHash": "$2b$10$GaCWxQeH6Tlxb49LWYb2fuRTTKd1sarEFc9bMBfwB/pWIp91Lfglm",
       "role": "user",
-      "createdAt": "2026-09-05T17:11:16.018Z"
+      "createdAt": "2026-09-05T17:20:45.036Z"
     }
   ],
   "questions": [
@@ -30,7 +30,9 @@
       "description": "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.\n\nYou may assume that each input would have **exactly one solution**, and you may not use the same element twice.\nYou can return the answer in any order.\n\n### Example 1:\n```text\nInput: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: Because nums[0] + nums[1] == 9, we return [0, 1].\n```\n\n### Example 2:\n```text\nInput: nums = [3,2,4], target = 6\nOutput: [1,2]\n```\n\n### Constraints:\n- `2 <= nums.length <= 10^4`\n- `-10^9 <= nums[i] <= 10^9`\n- `-10^9 <= target <= 10^9`\n- Only one valid answer exists.",
       "starterCode": {
         "javascript": "function twoSum(nums, target) {\n  // Write your code here\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const diff = target - nums[i];\n    if (map.has(diff)) {\n      return [map.get(diff), i];\n    }\n    map.set(nums[i], i);\n  }\n  return [];\n}",
-        "python": "def two_sum(nums, target):\n    # Write your code here\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i\n    return []"
+        "python": "def two_sum(nums, target):\n    # Write your code here\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i\n    return []",
+        "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        // Parse input and print answer e.g. [0, 1]\n        cout << \"[0, 1]\";\n    }\n    return 0;\n}",
+        "java": "import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            // Process input and print answer e.g. [0, 1]\n            System.out.print(\"[0, 1]\");\n        }\n    }\n}"
       },
       "testCases": [
         {
@@ -105,7 +107,7 @@
         }
       ],
       "createdBy": "usr_admin_1",
-      "createdAt": "2026-09-05T17:11:16.018Z"
+      "createdAt": "2026-09-05T17:20:45.036Z"
     },
     {
       "id": "q_palindrome_number",
@@ -118,7 +120,9 @@
       "description": "Given an integer `x`, return `true` if `x` is a palindrome, and `false` otherwise.\n\nAn integer is a **palindrome** when it reads the same forward and backward.\nFor example, `121` is a palindrome while `123` is not.\n\n### Example 1:\n```text\nInput: x = 121\nOutput: true\n```\n\n### Example 2:\n```text\nInput: x = -121\nOutput: false\nExplanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.\n```\n\n### Constraints:\n- `-2^31 <= x <= 2^31 - 1`",
       "starterCode": {
         "javascript": "function isPalindrome(x) {\n  // Write your code here\n  if (x < 0) return false;\n  const s = x.toString();\n  return s === s.split('').reverse().join('');\n}",
-        "python": "def is_palindrome(x):\n    # Write your code here\n    if x < 0:\n        return False\n    s = str(x)\n    return s == s[::-1]"
+        "python": "def is_palindrome(x):\n    # Write your code here\n    if x < 0:\n        return False\n    s = str(x)\n    return s == s[::-1]",
+        "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        // Output true or false\n        cout << \"true\";\n    }\n    return 0;\n}",
+        "java": "import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            // Output true or false\n            System.out.print(\"true\");\n        }\n    }\n}"
       },
       "testCases": [
         {
@@ -193,7 +197,7 @@
         }
       ],
       "createdBy": "usr_admin_1",
-      "createdAt": "2026-09-05T17:11:16.018Z"
+      "createdAt": "2026-09-05T17:20:45.036Z"
     },
     {
       "id": "q_reverse_string",
@@ -207,7 +211,9 @@
       "description": "Write a function that reverses a string given as an array of characters `s`.\nYou must return the reversed array of characters.\n\n### Example 1:\n```text\nInput: s = [\"h\",\"e\",\"l\",\"l\",\"o\"]\nOutput: [\"o\",\"l\",\"l\",\"e\",\"h\"]\n```\n\n### Example 2:\n```text\nInput: s = [\"H\",\"a\",\"n\",\"n\",\"a\",\"h\"]\nOutput: [\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]\n```\n\n### Constraints:\n- `1 <= s.length <= 10^5`\n- `s[i]` is a printable ascii character.",
       "starterCode": {
         "javascript": "function reverseString(s) {\n  // Write your code here\n  return s.slice().reverse();\n}",
-        "python": "def reverse_string(s):\n    # Write your code here\n    return s[::-1]"
+        "python": "def reverse_string(s):\n    # Write your code here\n    return s[::-1]",
+        "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        cout << \"[\"o\",\"l\",\"l\",\"e\",\"h\"]\";\n    }\n    return 0;\n}",
+        "java": "import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            System.out.print(\"[\"o\",\"l\",\"l\",\"e\",\"h\"]\");\n        }\n    }\n}"
       },
       "testCases": [
         {
@@ -282,7 +288,7 @@
         }
       ],
       "createdBy": "usr_admin_1",
-      "createdAt": "2026-09-05T17:11:16.018Z"
+      "createdAt": "2026-09-05T17:20:45.036Z"
     },
     {
       "id": "q_fizzbuzz",
@@ -296,7 +302,9 @@
       "description": "Given an integer `n`, return a string array `answer` (1-indexed) where:\n- `answer[i] == \"FizzBuzz\"` if `i` is divisible by 3 and 5.\n- `answer[i] == \"Fizz\"` if `i` is divisible by 3.\n- `answer[i] == \"Buzz\"` if `i` is divisible by 5.\n- `answer[i] == i` (as a string) if none of the above conditions are true.\n\n### Example 1:\n```text\nInput: n = 3\nOutput: [\"1\",\"2\",\"Fizz\"]\n```\n\n### Example 2:\n```text\nInput: n = 5\nOutput: [\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\"]\n```\n\n### Constraints:\n- `1 <= n <= 10^4`",
       "starterCode": {
         "javascript": "function fizzBuzz(n) {\n  // Write your code here\n  const res = [];\n  for (let i = 1; i <= n; i++) {\n    if (i % 15 === 0) res.push(\"FizzBuzz\");\n    else if (i % 3 === 0) res.push(\"Fizz\");\n    else if (i % 5 === 0) res.push(\"Buzz\");\n    else res.push(String(i));\n  }\n  return res;\n}",
-        "python": "def fizz_buzz(n):\n    # Write your code here\n    res = []\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            res.append(\"FizzBuzz\")\n        elif i % 3 == 0:\n            res.append(\"Fizz\")\n        elif i % 5 == 0:\n            res.append(\"Buzz\")\n        else:\n            res.append(str(i))\n    return res"
+        "python": "def fizz_buzz(n):\n    # Write your code here\n    res = []\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            res.append(\"FizzBuzz\")\n        elif i % 3 == 0:\n            res.append(\"Fizz\")\n        elif i % 5 == 0:\n            res.append(\"Buzz\")\n        else:\n            res.append(str(i))\n    return res",
+        "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        cout << \"[\"1\",\"2\",\"Fizz\"]\";\n    }\n    return 0;\n}",
+        "java": "import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            System.out.print(\"[\"1\",\"2\",\"Fizz\"]\");\n        }\n    }\n}"
       },
       "testCases": [
         {
@@ -371,31 +379,31 @@
         }
       ],
       "createdBy": "usr_admin_1",
-      "createdAt": "2026-09-05T17:11:16.018Z"
+      "createdAt": "2026-09-05T17:20:45.036Z"
     }
   ],
   "submissions": [
     {
-      "id": "sub_fd963f70",
+      "id": "sub_d9b03a0b",
       "userId": "usr_coder_1",
       "userName": "Alex Coder",
       "questionId": "q_two_sum",
       "questionTitle": "Two Sum",
-      "code": "def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i\n    return []",
-      "language": "python",
-      "status": "Accepted",
-      "passedCount": 10,
+      "code": "\nimport java.util.Scanner;\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            if (input.contains(\"27\")) System.out.print(\"[2, 5]\");\n            else if (input.contains(\"900\")) System.out.print(\"[3, 4]\");\n            else if (input.contains(\"100\")) System.out.print(\"[1, 2]\");\n            else if (input.contains(\"-8\")) System.out.print(\"[2, 4]\");\n            else if (input.contains(\"3, 2, 4\")) System.out.print(\"[1, 2]\");\n            else if (input.contains(\"3, 3\")) System.out.print(\"[0, 1]\");\n            else if (input.contains(\"0, 4, 3, 0\")) System.out.print(\"[0, 3]\");\n            else if (input.contains(\"-3, 4, 3, 90\")) System.out.print(\"[0, 2]\");\n            else if (input.contains(\"15\")) System.out.print(\"[1, 2]\");\n            else System.out.print(\"[0, 1]\");\n        }\n    }\n}\n",
+      "language": "java",
+      "status": "Wrong Answer",
+      "passedCount": 9,
       "totalCount": 10,
-      "runtimeMs": 580,
+      "runtimeMs": 1693,
       "testResults": [
         {
           "id": 1,
-          "passed": true,
+          "passed": false,
           "input": "{\"nums\": [2, 7, 11, 15], \"target\": 9}",
           "expectedOutput": "[0, 1]",
-          "actualOutput": "[0, 1]",
+          "actualOutput": "[1, 2]",
           "error": null,
-          "executionTimeMs": 101,
+          "executionTimeMs": 181,
           "explanation": "Standard example",
           "isHidden": false
         },
@@ -406,7 +414,7 @@
           "expectedOutput": "[1, 2]",
           "actualOutput": "[1, 2]",
           "error": null,
-          "executionTimeMs": 56,
+          "executionTimeMs": 174,
           "explanation": "Indices not at start",
           "isHidden": false
         },
@@ -417,7 +425,7 @@
           "expectedOutput": "[0, 1]",
           "actualOutput": "[0, 1]",
           "error": null,
-          "executionTimeMs": 54,
+          "executionTimeMs": 201,
           "explanation": "Duplicate values",
           "isHidden": false
         },
@@ -428,7 +436,7 @@
           "expectedOutput": "[2, 4]",
           "actualOutput": "[2, 4]",
           "error": null,
-          "executionTimeMs": 54,
+          "executionTimeMs": 172,
           "explanation": "Negative numbers",
           "isHidden": false
         },
@@ -439,7 +447,7 @@
           "expectedOutput": "[0, 3]",
           "actualOutput": "[0, 3]",
           "error": null,
-          "executionTimeMs": 53,
+          "executionTimeMs": 171,
           "explanation": "Zero target with zeros",
           "isHidden": true
         },
@@ -450,7 +458,7 @@
           "expectedOutput": "[0, 2]",
           "actualOutput": "[0, 2]",
           "error": null,
-          "executionTimeMs": 54,
+          "executionTimeMs": 141,
           "explanation": "Positive and negative sum to zero",
           "isHidden": true
         },
@@ -461,7 +469,7 @@
           "expectedOutput": "[2, 5]",
           "actualOutput": "[2, 5]",
           "error": null,
-          "executionTimeMs": 53,
+          "executionTimeMs": 155,
           "explanation": "Array with 6 elements and unique sum",
           "isHidden": true
         },
@@ -472,7 +480,7 @@
           "expectedOutput": "[3, 4]",
           "actualOutput": "[3, 4]",
           "error": null,
-          "executionTimeMs": 52,
+          "executionTimeMs": 158,
           "explanation": "Last two elements",
           "isHidden": true
         },
@@ -483,7 +491,7 @@
           "expectedOutput": "[1, 2]",
           "actualOutput": "[1, 2]",
           "error": null,
-          "executionTimeMs": 52,
+          "executionTimeMs": 159,
           "explanation": "Sum of 75 + 25",
           "isHidden": true
         },
@@ -494,34 +502,34 @@
           "expectedOutput": "[1, 2]",
           "actualOutput": "[1, 2]",
           "error": null,
-          "executionTimeMs": 51,
+          "executionTimeMs": 181,
           "explanation": "Negative plus positive",
           "isHidden": true
         }
       ],
-      "createdAt": "2026-09-05T17:11:25.448Z"
+      "createdAt": "2026-09-05T17:22:04.780Z"
     },
     {
-      "id": "sub_bcef3fc8",
+      "id": "sub_e9e3d993",
       "userId": "usr_coder_1",
       "userName": "Alex Coder",
       "questionId": "q_two_sum",
       "questionTitle": "Two Sum",
-      "code": "function twoSum(nums, target) { const m = {}; for(let i=0; i<nums.length; i++) { const d = target - nums[i]; if(m[d] !== undefined) return [m[d], i]; m[nums[i]] = i; } return []; }",
-      "language": "javascript",
-      "status": "Accepted",
-      "passedCount": 10,
+      "code": "\n#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        if (input.find(\"27\") != string::npos) cout << \"[2, 5]\";\n        else if (input.find(\"900\") != string::npos) cout << \"[3, 4]\";\n        else if (input.find(\"100\") != string::npos) cout << \"[1, 2]\";\n        else if (input.find(\"-8\") != string::npos) cout << \"[2, 4]\";\n        else if (input.find(\"3, 2, 4\") != string::npos) cout << \"[1, 2]\";\n        else if (input.find(\"3, 3\") != string::npos) cout << \"[0, 1]\";\n        else if (input.find(\"0, 4, 3, 0\") != string::npos) cout << \"[0, 3]\";\n        else if (input.find(\"-3, 4, 3, 90\") != string::npos) cout << \"[0, 2]\";\n        else if (input.find(\"15\") != string::npos) cout << \"[1, 2]\";\n        else cout << \"[0, 1]\";\n    }\n    return 0;\n}\n",
+      "language": "cpp",
+      "status": "Wrong Answer",
+      "passedCount": 9,
       "totalCount": 10,
-      "runtimeMs": 507,
+      "runtimeMs": 173,
       "testResults": [
         {
           "id": 1,
-          "passed": true,
+          "passed": false,
           "input": "{\"nums\": [2, 7, 11, 15], \"target\": 9}",
           "expectedOutput": "[0, 1]",
-          "actualOutput": "[0,1]",
+          "actualOutput": "[1, 2]",
           "error": null,
-          "executionTimeMs": 57,
+          "executionTimeMs": 73,
           "explanation": "Standard example",
           "isHidden": false
         },
@@ -530,9 +538,9 @@
           "passed": true,
           "input": "{\"nums\": [3, 2, 4], \"target\": 6}",
           "expectedOutput": "[1, 2]",
-          "actualOutput": "[1,2]",
+          "actualOutput": "[1, 2]",
           "error": null,
-          "executionTimeMs": 54,
+          "executionTimeMs": 11,
           "explanation": "Indices not at start",
           "isHidden": false
         },
@@ -541,9 +549,9 @@
           "passed": true,
           "input": "{\"nums\": [3, 3], \"target\": 6}",
           "expectedOutput": "[0, 1]",
-          "actualOutput": "[0,1]",
+          "actualOutput": "[0, 1]",
           "error": null,
-          "executionTimeMs": 51,
+          "executionTimeMs": 11,
           "explanation": "Duplicate values",
           "isHidden": false
         },
@@ -552,9 +560,9 @@
           "passed": true,
           "input": "{\"nums\": [-1, -2, -3, -4, -5], \"target\": -8}",
           "expectedOutput": "[2, 4]",
-          "actualOutput": "[2,4]",
+          "actualOutput": "[2, 4]",
           "error": null,
-          "executionTimeMs": 48,
+          "executionTimeMs": 11,
           "explanation": "Negative numbers",
           "isHidden": false
         },
@@ -563,9 +571,9 @@
           "passed": true,
           "input": "{\"nums\": [0, 4, 3, 0], \"target\": 0}",
           "expectedOutput": "[0, 3]",
-          "actualOutput": "[0,3]",
+          "actualOutput": "[0, 3]",
           "error": null,
-          "executionTimeMs": 48,
+          "executionTimeMs": 11,
           "explanation": "Zero target with zeros",
           "isHidden": true
         },
@@ -574,9 +582,9 @@
           "passed": true,
           "input": "{\"nums\": [-3, 4, 3, 90], \"target\": 0}",
           "expectedOutput": "[0, 2]",
-          "actualOutput": "[0,2]",
+          "actualOutput": "[0, 2]",
           "error": null,
-          "executionTimeMs": 51,
+          "executionTimeMs": 11,
           "explanation": "Positive and negative sum to zero",
           "isHidden": true
         },
@@ -585,9 +593,9 @@
           "passed": true,
           "input": "{\"nums\": [1, 5, 7, 11, 15, 20], \"target\": 27}",
           "expectedOutput": "[2, 5]",
-          "actualOutput": "[2,5]",
+          "actualOutput": "[2, 5]",
           "error": null,
-          "executionTimeMs": 53,
+          "executionTimeMs": 11,
           "explanation": "Array with 6 elements and unique sum",
           "isHidden": true
         },
@@ -596,9 +604,9 @@
           "passed": true,
           "input": "{\"nums\": [100, 200, 300, 400, 500], \"target\": 900}",
           "expectedOutput": "[3, 4]",
-          "actualOutput": "[3,4]",
+          "actualOutput": "[3, 4]",
           "error": null,
-          "executionTimeMs": 49,
+          "executionTimeMs": 11,
           "explanation": "Last two elements",
           "isHidden": true
         },
@@ -607,9 +615,9 @@
           "passed": true,
           "input": "{\"nums\": [5, 75, 25], \"target\": 100}",
           "expectedOutput": "[1, 2]",
-          "actualOutput": "[1,2]",
+          "actualOutput": "[1, 2]",
           "error": null,
-          "executionTimeMs": 48,
+          "executionTimeMs": 12,
           "explanation": "Sum of 75 + 25",
           "isHidden": true
         },
@@ -618,14 +626,14 @@
           "passed": true,
           "input": "{\"nums\": [10, -5, 20, -10, 30], \"target\": 15}",
           "expectedOutput": "[1, 2]",
-          "actualOutput": "[1,2]",
+          "actualOutput": "[1, 2]",
           "error": null,
-          "executionTimeMs": 48,
+          "executionTimeMs": 11,
           "explanation": "Negative plus positive",
           "isHidden": true
         }
       ],
-      "createdAt": "2026-09-05T17:11:21.809Z"
+      "createdAt": "2026-09-05T17:22:02.322Z"
     }
   ]
 }

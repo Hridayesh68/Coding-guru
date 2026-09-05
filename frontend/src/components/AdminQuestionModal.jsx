@@ -9,6 +9,9 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
   const [description, setDescription] = useState('');
   const [jsCode, setJsCode] = useState('function solve(input) {\n  // Write solution here\n  return input;\n}');
   const [pyCode, setPyCode] = useState('def solve(input):\n    # Write solution here\n    return input');
+  const [cppCode, setCppCode] = useState('#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        cout << "answer";\n    }\n    return 0;\n}');
+  const [javaCode, setJavaCode] = useState('import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            System.out.print("answer");\n        }\n    }\n}');
+  const [activeCodeLang, setActiveCodeLang] = useState('javascript');
   
   // Exactly 10 test cases
   const [testCases, setTestCases] = useState(() =>
@@ -33,6 +36,8 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
       setDescription(questionToEdit.description || '');
       setJsCode(questionToEdit.starterCode?.javascript || '');
       setPyCode(questionToEdit.starterCode?.python || '');
+      setCppCode(questionToEdit.starterCode?.cpp || '#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        cout << "answer";\n    }\n    return 0;\n}');
+      setJavaCode(questionToEdit.starterCode?.java || 'import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            System.out.print("answer");\n        }\n    }\n}');
       if (Array.isArray(questionToEdit.testCases) && questionToEdit.testCases.length === 10) {
         setTestCases(questionToEdit.testCases);
       }
@@ -86,7 +91,9 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
         description,
         starterCode: {
           javascript: jsCode,
-          python: pyCode
+          python: pyCode,
+          cpp: cppCode,
+          java: javaCode
         },
         testCases
       };
@@ -215,28 +222,59 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
             />
           </div>
 
-          {/* Starter Code */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">JavaScript Starter Code</label>
-              <textarea
-                rows={4}
-                value={jsCode}
-                onChange={(e) => setJsCode(e.target.value)}
-                className="form-textarea"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}
-              />
+          {/* Starter Code Section with 4 Languages */}
+          <div style={{ marginBottom: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <label className="form-label" style={{ marginBottom: 0 }}>Starter Code Templates (4 Languages)</label>
+              <div style={{ display: 'flex', gap: '0.35rem' }}>
+                {[
+                  { id: 'javascript', label: 'JavaScript' },
+                  { id: 'python', label: 'Python' },
+                  { id: 'cpp', label: 'C++' },
+                  { id: 'java', label: 'Java' }
+                ].map((lang) => (
+                  <button
+                    key={lang.id}
+                    type="button"
+                    onClick={() => setActiveCodeLang(lang.id)}
+                    style={{
+                      padding: '0.25rem 0.6rem',
+                      fontSize: '0.75rem',
+                      borderRadius: '5px',
+                      fontWeight: 600,
+                      border: '1px solid',
+                      borderColor: activeCodeLang === lang.id ? 'var(--primary)' : 'var(--border-subtle)',
+                      background: activeCodeLang === lang.id ? 'var(--primary)' : '#1a233a',
+                      color: activeCodeLang === lang.id ? '#ffffff' : 'var(--text-secondary)'
+                    }}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label className="form-label">Python Starter Code</label>
-              <textarea
-                rows={4}
-                value={pyCode}
-                onChange={(e) => setPyCode(e.target.value)}
-                className="form-textarea"
-                style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}
-              />
-            </div>
+
+            <textarea
+              rows={5}
+              value={
+                activeCodeLang === 'javascript'
+                  ? jsCode
+                  : activeCodeLang === 'python'
+                  ? pyCode
+                  : activeCodeLang === 'cpp'
+                  ? cppCode
+                  : javaCode
+              }
+              onChange={(e) => {
+                const val = e.target.value;
+                if (activeCodeLang === 'javascript') setJsCode(val);
+                else if (activeCodeLang === 'python') setPyCode(val);
+                else if (activeCodeLang === 'cpp') setCppCode(val);
+                else setJavaCode(val);
+              }}
+              className="form-textarea"
+              style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}
+            />
           </div>
 
           {/* 10 Test Cases Configuration Section */}

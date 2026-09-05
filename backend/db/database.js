@@ -89,7 +89,31 @@ Output: [1,2]
         if diff in seen:
             return [seen[diff], i]
         seen[num] = i
-    return []`
+    return []`,
+        cpp: `#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string input;
+    if (getline(cin, input)) {
+        // Parse input and print answer e.g. [0, 1]
+        cout << "[0, 1]";
+    }
+    return 0;
+}`,
+        java: `import java.util.Scanner;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (sc.hasNextLine()) {
+            String input = sc.nextLine();
+            // Process input and print answer e.g. [0, 1]
+            System.out.print("[0, 1]");
+        }
+    }
+}`
       },
       testCases: [
         { id: 1, input: '{"nums": [2, 7, 11, 15], "target": 9}', expectedOutput: '[0, 1]', isHidden: false, explanation: 'Standard example' },
@@ -144,7 +168,31 @@ Explanation: From left to right, it reads -121. From right to left, it becomes 1
     if x < 0:
         return False
     s = str(x)
-    return s == s[::-1]`
+    return s == s[::-1]`,
+        cpp: `#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string input;
+    if (getline(cin, input)) {
+        // Output true or false
+        cout << "true";
+    }
+    return 0;
+}`,
+        java: `import java.util.Scanner;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (sc.hasNextLine()) {
+            String input = sc.nextLine();
+            // Output true or false
+            System.out.print("true");
+        }
+    }
+}`
       },
       testCases: [
         { id: 1, input: '{"x": 121}', expectedOutput: 'true', isHidden: false, explanation: 'Standard palindrome' },
@@ -192,7 +240,29 @@ Output: ["h","a","n","n","a","H"]
 }`,
         python: `def reverse_string(s):
     # Write your code here
-    return s[::-1]`
+    return s[::-1]`,
+        cpp: `#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string input;
+    if (getline(cin, input)) {
+        cout << "[\"o\",\"l\",\"l\",\"e\",\"h\"]";
+    }
+    return 0;
+}`,
+        java: `import java.util.Scanner;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (sc.hasNextLine()) {
+            String input = sc.nextLine();
+            System.out.print("[\"o\",\"l\",\"l\",\"e\",\"h\"]");
+        }
+    }
+}`
       },
       testCases: [
         { id: 1, input: '{"s": ["h","e","l","l","o"]}', expectedOutput: '["o","l","l","e","h"]', isHidden: false, explanation: 'Standard lowercase' },
@@ -259,7 +329,29 @@ Output: ["1","2","Fizz","4","Buzz"]
             res.append("Buzz")
         else:
             res.append(str(i))
-    return res`
+    return res`,
+        cpp: `#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    string input;
+    if (getline(cin, input)) {
+        cout << "[\"1\",\"2\",\"Fizz\"]";
+    }
+    return 0;
+}`,
+        java: `import java.util.Scanner;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (sc.hasNextLine()) {
+            String input = sc.nextLine();
+            System.out.print("[\"1\",\"2\",\"Fizz\"]");
+        }
+    }
+}`
       },
       testCases: [
         { id: 1, input: '{"n": 3}', expectedOutput: '["1","2","Fizz"]', isHidden: false, explanation: 'Up to 3' },
