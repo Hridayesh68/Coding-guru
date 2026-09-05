@@ -35,3 +35,9 @@ Thumbs.db
 # Temporary test & execution scratchpads
 temp/
 *.tmp
+
+# SQLite Database
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+backend/db/data/*.sqlite

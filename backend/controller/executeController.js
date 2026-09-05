@@ -16,7 +16,7 @@ export const runCode = async (req, res) => {
     if (customTestCases && Array.isArray(customTestCases) && customTestCases.length > 0) {
       casesToRun = customTestCases;
     } else if (questionId) {
-      const question = db.getQuestionById(questionId);
+      const question = await db.getQuestionById(questionId);
       if (!question) {
         return res.status(404).json({ success: false, message: 'Question not found.' });
       }
@@ -54,7 +54,7 @@ export const submitCode = async (req, res) => {
       });
     }
 
-    const question = db.getQuestionById(questionId);
+    const question = await db.getQuestionById(questionId);
     if (!question) {
       return res.status(404).json({ success: false, message: 'Question not found.' });
     }
@@ -88,7 +88,7 @@ export const submitCode = async (req, res) => {
       createdAt: new Date().toISOString()
     };
 
-    db.createSubmission(submissionRecord);
+    await db.createSubmission(submissionRecord);
 
     return res.json({
       success: true,
@@ -101,11 +101,11 @@ export const submitCode = async (req, res) => {
 };
 
 // Get Submissions for Question or User
-export const getSubmissions = (req, res) => {
+export const getSubmissions = async (req, res) => {
   try {
     const { questionId } = req.query;
     const userId = req.user.id;
-    const submissions = db.getUserSubmissions(userId, questionId);
+    const submissions = await db.getUserSubmissions(userId, questionId);
 
     return res.json({
       success: true,

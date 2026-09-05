@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { db } from '../db/database.js';
 
-export const verifyToken = (req, res, next) => {
+export const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ success: false, message: 'Authentication required. No token provided.' });
@@ -10,7 +10,7 @@ export const verifyToken = (req, res, next) => {
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecret_jwt_coding_guru_key_2026_x7a9');
-    const user = db.findUserById(decoded.id);
+    const user = await db.findUserById(decoded.id);
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid session. User not found.' });
     }

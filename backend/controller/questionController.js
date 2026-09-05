@@ -2,11 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db/database.js';
 
 // Get all questions with solved status for current user if available
-export const getAllQuestions = (req, res) => {
+export const getAllQuestions = async (req, res) => {
   try {
-    const questions = db.getQuestions();
+    const questions = await db.getQuestions();
     const userId = req.user?.id;
-    const submissions = db.getAllSubmissions();
+    const submissions = await db.getAllSubmissions();
 
     const result = questions.map((q) => {
       const qSubmissions = submissions.filter((s) => s.questionId === q.id);
@@ -34,16 +34,15 @@ export const getAllQuestions = (req, res) => {
 };
 
 // Get single question by ID or slug
-export const getQuestionById = (req, res) => {
+export const getQuestionById = async (req, res) => {
   try {
     const { id } = req.params;
-    const question = db.getQuestionById(id);
+    const question = await db.getQuestionById(id);
 
     if (!question) {
       return res.status(404).json({ success: false, message: 'Question not found.' });
     }
 
-    // Return question with sample test cases
     return res.json({
       success: true,
       question
@@ -55,7 +54,7 @@ export const getQuestionById = (req, res) => {
 };
 
 // Create Question (Admin Only) - Requires exactly/at least 10 test cases
-export const createQuestion = (req, res) => {
+export const createQuestion = async (req, res) => {
   try {
     const { title, difficulty, tags, description, starterCode, testCases } = req.body;
 
@@ -96,18 +95,20 @@ export const createQuestion = (req, res) => {
       description,
       starterCode: starterCode || {
         javascript: 'function solve(input) {\n  // Write your code here\n}',
-        python: 'def solve(input):\n    # Write your code here\n    pass'
+        python: 'def solve(input):\n    # Write your code here\n    pass',
+        cpp: '#include <iostream>\nusing namespace std;\nint main() { return 0; }',
+        java: 'public class Solution { public static void main(String[] args) {} }'
       },
       testCases: formattedTestCases,
       createdBy: req.user.id,
       createdAt: new Date().toISOString()
     };
 
-    db.createQuestion(newQuestion);
+    await db.createQuestion(newQuestion);
 
     return res.status(201).json({
       success: true,
-      message: 'Question with 10 test cases created successfully!',
+      message: 'Question with 10 test cases created successfully in SQLite!',
       question: newQuestion
     });
   } catch (error) {
@@ -117,10 +118,10 @@ export const createQuestion = (req, res) => {
 };
 
 // Update Question (Admin Only)
-export const updateQuestion = (req, res) => {
+export const updateQuestion = async (req, res) => {
   try {
     const { id } = req.params;
-    const existing = db.getQuestionById(id);
+    const existing = await db.getQuestionById(id);
     if (!existing) {
       return res.status(404).json({ success: false, message: 'Question not found.' });
     }
@@ -149,7 +150,7 @@ export const updateQuestion = (req, res) => {
       }));
     }
 
-    const updated = db.updateQuestion(existing.id, updates);
+    const updated = await db.updateQuestion(existing.id, updates);
     return res.json({
       success: true,
       message: 'Question updated successfully.',
@@ -162,10 +163,10 @@ export const updateQuestion = (req, res) => {
 };
 
 // Delete Question (Admin Only)
-export const deleteQuestion = (req, res) => {
+export const deleteQuestion = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = db.deleteQuestion(id);
+    const deleted = await db.deleteQuestion(id);
     if (!deleted) {
       return res.status(404).json({ success: false, message: 'Question not found.' });
     }
@@ -177,11 +178,11 @@ export const deleteQuestion = (req, res) => {
 };
 
 // Admin Platform Analytics
-export const getAdminStats = (req, res) => {
+export const getAdminStats = async (req, res) => {
   try {
-    const questions = db.getQuestions();
-    const submissions = db.getAllSubmissions();
-    const users = db.data.users;
+    const questions = await db.getQuestions();
+    const submissions = await db.getAllSubmissions();
+    const userCounts = await db.getUserCount();
 
     const totalSubmissions = submissions.length;
     const acceptedSubmissions = submissions.filter((s) => s.status === 'Accepted').length;
@@ -191,8 +192,8 @@ export const getAdminStats = (req, res) => {
       success: true,
       stats: {
         totalQuestions: questions.length,
-        totalUsers: users.filter((u) => u.role === 'user').length,
-        totalAdmins: users.filter((u) => u.role === 'admin').length,
+        totalUsers: userCounts.totalUsers,
+        totalAdmins: userCounts.totalAdmins,
         totalSubmissions,
         acceptedSubmissions,
         acceptanceRate: `${acceptanceRate}%`

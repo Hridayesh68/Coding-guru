@@ -31,7 +31,7 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Password must be at least 6 characters long.' });
     }
 
-    const existing = db.findUserByEmail(email);
+    const existing = await db.findUserByEmail(email);
     if (existing) {
       return res.status(409).json({ success: false, message: 'An account with this email already exists.' });
     }
@@ -39,7 +39,7 @@ export const registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const newUser = db.createUser({
+    const newUser = await db.createUser({
       id: `usr_${uuidv4().slice(0, 8)}`,
       name: name.trim(),
       email: email.trim().toLowerCase(),
@@ -78,7 +78,7 @@ export const registerAdmin = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Invalid Admin Secret Key.' });
     }
 
-    const existing = db.findUserByEmail(email);
+    const existing = await db.findUserByEmail(email);
     if (existing) {
       return res.status(409).json({ success: false, message: 'An account with this email already exists.' });
     }
@@ -86,7 +86,7 @@ export const registerAdmin = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const newAdmin = db.createUser({
+    const newAdmin = await db.createUser({
       id: `adm_${uuidv4().slice(0, 8)}`,
       name: name.trim(),
       email: email.trim().toLowerCase(),
@@ -121,7 +121,7 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email and password are required.' });
     }
 
-    const user = db.findUserByEmail(email);
+    const user = await db.findUserByEmail(email);
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid email or password.' });
     }
@@ -157,7 +157,7 @@ export const loginAdmin = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Email and password are required.' });
     }
 
-    const user = db.findUserByEmail(email);
+    const user = await db.findUserByEmail(email);
     if (!user) {
       return res.status(401).json({ success: false, message: 'Invalid admin credentials.' });
     }

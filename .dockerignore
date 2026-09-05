@@ -1,0 +1,14 @@
+node_modules/
+*/node_modules/
+.git/
+.gitignore
+.vscode/
+.idea/
+dist/
+dist-ssr/
+*.log
+npm-debug.log*
+.env
+*.tmp
+temp/
+backend/db/data/*.tmp
