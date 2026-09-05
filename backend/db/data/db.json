@@ -1,0 +1,631 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_1",
+      "name": "Site Administrator",
+      "email": "admin@codingguru.com",
+      "passwordHash": "$2b$10$UZFIOfn09AfPcfwdODjlfO7Hd4gv7lQQNH2tcsB6cWQ48AANgXbCK",
+      "role": "admin",
+      "createdAt": "2026-09-05T17:11:16.017Z"
+    },
+    {
+      "id": "usr_coder_1",
+      "name": "Alex Coder",
+      "email": "coder@codingguru.com",
+      "passwordHash": "$2b$10$UZFIOfn09AfPcfwdODjlfOh.cz3LC.nnZjyGM8O7Evvl7aPDNwPKC",
+      "role": "user",
+      "createdAt": "2026-09-05T17:11:16.018Z"
+    }
+  ],
+  "questions": [
+    {
+      "id": "q_two_sum",
+      "title": "Two Sum",
+      "slug": "two-sum",
+      "difficulty": "Easy",
+      "tags": [
+        "Array",
+        "Hash Table"
+      ],
+      "description": "Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.\n\nYou may assume that each input would have **exactly one solution**, and you may not use the same element twice.\nYou can return the answer in any order.\n\n### Example 1:\n```text\nInput: nums = [2,7,11,15], target = 9\nOutput: [0,1]\nExplanation: Because nums[0] + nums[1] == 9, we return [0, 1].\n```\n\n### Example 2:\n```text\nInput: nums = [3,2,4], target = 6\nOutput: [1,2]\n```\n\n### Constraints:\n- `2 <= nums.length <= 10^4`\n- `-10^9 <= nums[i] <= 10^9`\n- `-10^9 <= target <= 10^9`\n- Only one valid answer exists.",
+      "starterCode": {
+        "javascript": "function twoSum(nums, target) {\n  // Write your code here\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const diff = target - nums[i];\n    if (map.has(diff)) {\n      return [map.get(diff), i];\n    }\n    map.set(nums[i], i);\n  }\n  return [];\n}",
+        "python": "def two_sum(nums, target):\n    # Write your code here\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i\n    return []"
+      },
+      "testCases": [
+        {
+          "id": 1,
+          "input": "{\"nums\": [2, 7, 11, 15], \"target\": 9}",
+          "expectedOutput": "[0, 1]",
+          "isHidden": false,
+          "explanation": "Standard example"
+        },
+        {
+          "id": 2,
+          "input": "{\"nums\": [3, 2, 4], \"target\": 6}",
+          "expectedOutput": "[1, 2]",
+          "isHidden": false,
+          "explanation": "Indices not at start"
+        },
+        {
+          "id": 3,
+          "input": "{\"nums\": [3, 3], \"target\": 6}",
+          "expectedOutput": "[0, 1]",
+          "isHidden": false,
+          "explanation": "Duplicate values"
+        },
+        {
+          "id": 4,
+          "input": "{\"nums\": [-1, -2, -3, -4, -5], \"target\": -8}",
+          "expectedOutput": "[2, 4]",
+          "isHidden": false,
+          "explanation": "Negative numbers"
+        },
+        {
+          "id": 5,
+          "input": "{\"nums\": [0, 4, 3, 0], \"target\": 0}",
+          "expectedOutput": "[0, 3]",
+          "isHidden": true,
+          "explanation": "Zero target with zeros"
+        },
+        {
+          "id": 6,
+          "input": "{\"nums\": [-3, 4, 3, 90], \"target\": 0}",
+          "expectedOutput": "[0, 2]",
+          "isHidden": true,
+          "explanation": "Positive and negative sum to zero"
+        },
+        {
+          "id": 7,
+          "input": "{\"nums\": [1, 5, 7, 11, 15, 20], \"target\": 27}",
+          "expectedOutput": "[2, 5]",
+          "isHidden": true,
+          "explanation": "Array with 6 elements and unique sum"
+        },
+        {
+          "id": 8,
+          "input": "{\"nums\": [100, 200, 300, 400, 500], \"target\": 900}",
+          "expectedOutput": "[3, 4]",
+          "isHidden": true,
+          "explanation": "Last two elements"
+        },
+        {
+          "id": 9,
+          "input": "{\"nums\": [5, 75, 25], \"target\": 100}",
+          "expectedOutput": "[1, 2]",
+          "isHidden": true,
+          "explanation": "Sum of 75 + 25"
+        },
+        {
+          "id": 10,
+          "input": "{\"nums\": [10, -5, 20, -10, 30], \"target\": 15}",
+          "expectedOutput": "[1, 2]",
+          "isHidden": true,
+          "explanation": "Negative plus positive"
+        }
+      ],
+      "createdBy": "usr_admin_1",
+      "createdAt": "2026-09-05T17:11:16.018Z"
+    },
+    {
+      "id": "q_palindrome_number",
+      "title": "Palindrome Number",
+      "slug": "palindrome-number",
+      "difficulty": "Easy",
+      "tags": [
+        "Math"
+      ],
+      "description": "Given an integer `x`, return `true` if `x` is a palindrome, and `false` otherwise.\n\nAn integer is a **palindrome** when it reads the same forward and backward.\nFor example, `121` is a palindrome while `123` is not.\n\n### Example 1:\n```text\nInput: x = 121\nOutput: true\n```\n\n### Example 2:\n```text\nInput: x = -121\nOutput: false\nExplanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.\n```\n\n### Constraints:\n- `-2^31 <= x <= 2^31 - 1`",
+      "starterCode": {
+        "javascript": "function isPalindrome(x) {\n  // Write your code here\n  if (x < 0) return false;\n  const s = x.toString();\n  return s === s.split('').reverse().join('');\n}",
+        "python": "def is_palindrome(x):\n    # Write your code here\n    if x < 0:\n        return False\n    s = str(x)\n    return s == s[::-1]"
+      },
+      "testCases": [
+        {
+          "id": 1,
+          "input": "{\"x\": 121}",
+          "expectedOutput": "true",
+          "isHidden": false,
+          "explanation": "Standard palindrome"
+        },
+        {
+          "id": 2,
+          "input": "{\"x\": -121}",
+          "expectedOutput": "false",
+          "isHidden": false,
+          "explanation": "Negative numbers are not palindromes"
+        },
+        {
+          "id": 3,
+          "input": "{\"x\": 10}",
+          "expectedOutput": "false",
+          "isHidden": false,
+          "explanation": "Ending in zero"
+        },
+        {
+          "id": 4,
+          "input": "{\"x\": 0}",
+          "expectedOutput": "true",
+          "isHidden": false,
+          "explanation": "Single digit zero"
+        },
+        {
+          "id": 5,
+          "input": "{\"x\": 7}",
+          "expectedOutput": "true",
+          "isHidden": true,
+          "explanation": "Single positive digit"
+        },
+        {
+          "id": 6,
+          "input": "{\"x\": 1221}",
+          "expectedOutput": "true",
+          "isHidden": true,
+          "explanation": "Even length palindrome"
+        },
+        {
+          "id": 7,
+          "input": "{\"x\": 123454321}",
+          "expectedOutput": "true",
+          "isHidden": true,
+          "explanation": "Large odd length palindrome"
+        },
+        {
+          "id": 8,
+          "input": "{\"x\": 1000021}",
+          "expectedOutput": "false",
+          "isHidden": true,
+          "explanation": "Non-palindrome with zeros"
+        },
+        {
+          "id": 9,
+          "input": "{\"x\": 123321}",
+          "expectedOutput": "true",
+          "isHidden": true,
+          "explanation": "6-digit palindrome"
+        },
+        {
+          "id": 10,
+          "input": "{\"x\": 999999}",
+          "expectedOutput": "true",
+          "isHidden": true,
+          "explanation": "All matching digits"
+        }
+      ],
+      "createdBy": "usr_admin_1",
+      "createdAt": "2026-09-05T17:11:16.018Z"
+    },
+    {
+      "id": "q_reverse_string",
+      "title": "Reverse String",
+      "slug": "reverse-string",
+      "difficulty": "Easy",
+      "tags": [
+        "Two Pointers",
+        "String"
+      ],
+      "description": "Write a function that reverses a string given as an array of characters `s`.\nYou must return the reversed array of characters.\n\n### Example 1:\n```text\nInput: s = [\"h\",\"e\",\"l\",\"l\",\"o\"]\nOutput: [\"o\",\"l\",\"l\",\"e\",\"h\"]\n```\n\n### Example 2:\n```text\nInput: s = [\"H\",\"a\",\"n\",\"n\",\"a\",\"h\"]\nOutput: [\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]\n```\n\n### Constraints:\n- `1 <= s.length <= 10^5`\n- `s[i]` is a printable ascii character.",
+      "starterCode": {
+        "javascript": "function reverseString(s) {\n  // Write your code here\n  return s.slice().reverse();\n}",
+        "python": "def reverse_string(s):\n    # Write your code here\n    return s[::-1]"
+      },
+      "testCases": [
+        {
+          "id": 1,
+          "input": "{\"s\": [\"h\",\"e\",\"l\",\"l\",\"o\"]}",
+          "expectedOutput": "[\"o\",\"l\",\"l\",\"e\",\"h\"]",
+          "isHidden": false,
+          "explanation": "Standard lowercase"
+        },
+        {
+          "id": 2,
+          "input": "{\"s\": [\"H\",\"a\",\"n\",\"n\",\"a\",\"h\"]}",
+          "expectedOutput": "[\"h\",\"a\",\"n\",\"n\",\"a\",\"H\"]",
+          "isHidden": false,
+          "explanation": "Mixed casing palindrome"
+        },
+        {
+          "id": 3,
+          "input": "{\"s\": [\"a\"]}",
+          "expectedOutput": "[\"a\"]",
+          "isHidden": false,
+          "explanation": "Single character"
+        },
+        {
+          "id": 4,
+          "input": "{\"s\": [\"a\",\"b\"]}",
+          "expectedOutput": "[\"b\",\"a\"]",
+          "isHidden": false,
+          "explanation": "Two characters"
+        },
+        {
+          "id": 5,
+          "input": "{\"s\": [\"1\",\"2\",\"3\",\"4\",\"5\"]}",
+          "expectedOutput": "[\"5\",\"4\",\"3\",\"2\",\"1\"]",
+          "isHidden": true,
+          "explanation": "Numeric characters"
+        },
+        {
+          "id": 6,
+          "input": "{\"s\": [\"!\",\"@\",\"#\",\"$\"]}",
+          "expectedOutput": "[\"$\",\"#\",\"@\",\"!\"]",
+          "isHidden": true,
+          "explanation": "Special characters"
+        },
+        {
+          "id": 7,
+          "input": "{\"s\": [\"c\",\"o\",\"d\",\"i\",\"n\",\"g\"]}",
+          "expectedOutput": "[\"g\",\"n\",\"i\",\"d\",\"o\",\"c\"]",
+          "isHidden": true,
+          "explanation": "Word coding"
+        },
+        {
+          "id": 8,
+          "input": "{\"s\": [\" \",\"a\",\"b\",\" \"]}",
+          "expectedOutput": "[\" \",\"b\",\"a\",\" \"]",
+          "isHidden": true,
+          "explanation": "Leading and trailing spaces"
+        },
+        {
+          "id": 9,
+          "input": "{\"s\": [\"r\",\"a\",\"c\",\"e\",\"c\",\"a\",\"r\"]}",
+          "expectedOutput": "[\"r\",\"a\",\"c\",\"e\",\"c\",\"a\",\"r\"]",
+          "isHidden": true,
+          "explanation": "Palindrome word"
+        },
+        {
+          "id": 10,
+          "input": "{\"s\": [\"A\",\"B\",\"C\",\"D\",\"E\",\"F\"]}",
+          "expectedOutput": "[\"F\",\"E\",\"D\",\"C\",\"B\",\"A\"]",
+          "isHidden": true,
+          "explanation": "Uppercase letters"
+        }
+      ],
+      "createdBy": "usr_admin_1",
+      "createdAt": "2026-09-05T17:11:16.018Z"
+    },
+    {
+      "id": "q_fizzbuzz",
+      "title": "Fizz Buzz",
+      "slug": "fizz-buzz",
+      "difficulty": "Easy",
+      "tags": [
+        "Math",
+        "String"
+      ],
+      "description": "Given an integer `n`, return a string array `answer` (1-indexed) where:\n- `answer[i] == \"FizzBuzz\"` if `i` is divisible by 3 and 5.\n- `answer[i] == \"Fizz\"` if `i` is divisible by 3.\n- `answer[i] == \"Buzz\"` if `i` is divisible by 5.\n- `answer[i] == i` (as a string) if none of the above conditions are true.\n\n### Example 1:\n```text\nInput: n = 3\nOutput: [\"1\",\"2\",\"Fizz\"]\n```\n\n### Example 2:\n```text\nInput: n = 5\nOutput: [\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\"]\n```\n\n### Constraints:\n- `1 <= n <= 10^4`",
+      "starterCode": {
+        "javascript": "function fizzBuzz(n) {\n  // Write your code here\n  const res = [];\n  for (let i = 1; i <= n; i++) {\n    if (i % 15 === 0) res.push(\"FizzBuzz\");\n    else if (i % 3 === 0) res.push(\"Fizz\");\n    else if (i % 5 === 0) res.push(\"Buzz\");\n    else res.push(String(i));\n  }\n  return res;\n}",
+        "python": "def fizz_buzz(n):\n    # Write your code here\n    res = []\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            res.append(\"FizzBuzz\")\n        elif i % 3 == 0:\n            res.append(\"Fizz\")\n        elif i % 5 == 0:\n            res.append(\"Buzz\")\n        else:\n            res.append(str(i))\n    return res"
+      },
+      "testCases": [
+        {
+          "id": 1,
+          "input": "{\"n\": 3}",
+          "expectedOutput": "[\"1\",\"2\",\"Fizz\"]",
+          "isHidden": false,
+          "explanation": "Up to 3"
+        },
+        {
+          "id": 2,
+          "input": "{\"n\": 5}",
+          "expectedOutput": "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\"]",
+          "isHidden": false,
+          "explanation": "Up to 5"
+        },
+        {
+          "id": 3,
+          "input": "{\"n\": 15}",
+          "expectedOutput": "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\",\"Fizz\",\"7\",\"8\",\"Fizz\",\"Buzz\",\"11\",\"Fizz\",\"13\",\"14\",\"FizzBuzz\"]",
+          "isHidden": false,
+          "explanation": "Up to 15 (includes FizzBuzz)"
+        },
+        {
+          "id": 4,
+          "input": "{\"n\": 1}",
+          "expectedOutput": "[\"1\"]",
+          "isHidden": false,
+          "explanation": "Single element"
+        },
+        {
+          "id": 5,
+          "input": "{\"n\": 2}",
+          "expectedOutput": "[\"1\",\"2\"]",
+          "isHidden": true,
+          "explanation": "No Fizz or Buzz"
+        },
+        {
+          "id": 6,
+          "input": "{\"n\": 6}",
+          "expectedOutput": "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\",\"Fizz\"]",
+          "isHidden": true,
+          "explanation": "Up to 6"
+        },
+        {
+          "id": 7,
+          "input": "{\"n\": 10}",
+          "expectedOutput": "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\",\"Fizz\",\"7\",\"8\",\"Fizz\",\"Buzz\"]",
+          "isHidden": true,
+          "explanation": "Up to 10"
+        },
+        {
+          "id": 8,
+          "input": "{\"n\": 16}",
+          "expectedOutput": "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\",\"Fizz\",\"7\",\"8\",\"Fizz\",\"Buzz\",\"11\",\"Fizz\",\"13\",\"14\",\"FizzBuzz\",\"16\"]",
+          "isHidden": true,
+          "explanation": "After 15"
+        },
+        {
+          "id": 9,
+          "input": "{\"n\": 9}",
+          "expectedOutput": "[\"1\",\"2\",\"Fizz\",\"4\",\"Buzz\",\"Fizz\",\"7\",\"8\",\"Fizz\"]",
+          "isHidden": true,
+          "explanation": "Multiple 3s"
+        },
+        {
+          "id": 10,
+          "input": "{\"n\": 4}",
+          "expectedOutput": "[\"1\",\"2\",\"Fizz\",\"4\"]",
+          "isHidden": true,
+          "explanation": "Small boundary"
+        }
+      ],
+      "createdBy": "usr_admin_1",
+      "createdAt": "2026-09-05T17:11:16.018Z"
+    }
+  ],
+  "submissions": [
+    {
+      "id": "sub_fd963f70",
+      "userId": "usr_coder_1",
+      "userName": "Alex Coder",
+      "questionId": "q_two_sum",
+      "questionTitle": "Two Sum",
+      "code": "def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i\n    return []",
+      "language": "python",
+      "status": "Accepted",
+      "passedCount": 10,
+      "totalCount": 10,
+      "runtimeMs": 580,
+      "testResults": [
+        {
+          "id": 1,
+          "passed": true,
+          "input": "{\"nums\": [2, 7, 11, 15], \"target\": 9}",
+          "expectedOutput": "[0, 1]",
+          "actualOutput": "[0, 1]",
+          "error": null,
+          "executionTimeMs": 101,
+          "explanation": "Standard example",
+          "isHidden": false
+        },
+        {
+          "id": 2,
+          "passed": true,
+          "input": "{\"nums\": [3, 2, 4], \"target\": 6}",
+          "expectedOutput": "[1, 2]",
+          "actualOutput": "[1, 2]",
+          "error": null,
+          "executionTimeMs": 56,
+          "explanation": "Indices not at start",
+          "isHidden": false
+        },
+        {
+          "id": 3,
+          "passed": true,
+          "input": "{\"nums\": [3, 3], \"target\": 6}",
+          "expectedOutput": "[0, 1]",
+          "actualOutput": "[0, 1]",
+          "error": null,
+          "executionTimeMs": 54,
+          "explanation": "Duplicate values",
+          "isHidden": false
+        },
+        {
+          "id": 4,
+          "passed": true,
+          "input": "{\"nums\": [-1, -2, -3, -4, -5], \"target\": -8}",
+          "expectedOutput": "[2, 4]",
+          "actualOutput": "[2, 4]",
+          "error": null,
+          "executionTimeMs": 54,
+          "explanation": "Negative numbers",
+          "isHidden": false
+        },
+        {
+          "id": 5,
+          "passed": true,
+          "input": "{\"nums\": [0, 4, 3, 0], \"target\": 0}",
+          "expectedOutput": "[0, 3]",
+          "actualOutput": "[0, 3]",
+          "error": null,
+          "executionTimeMs": 53,
+          "explanation": "Zero target with zeros",
+          "isHidden": true
+        },
+        {
+          "id": 6,
+          "passed": true,
+          "input": "{\"nums\": [-3, 4, 3, 90], \"target\": 0}",
+          "expectedOutput": "[0, 2]",
+          "actualOutput": "[0, 2]",
+          "error": null,
+          "executionTimeMs": 54,
+          "explanation": "Positive and negative sum to zero",
+          "isHidden": true
+        },
+        {
+          "id": 7,
+          "passed": true,
+          "input": "{\"nums\": [1, 5, 7, 11, 15, 20], \"target\": 27}",
+          "expectedOutput": "[2, 5]",
+          "actualOutput": "[2, 5]",
+          "error": null,
+          "executionTimeMs": 53,
+          "explanation": "Array with 6 elements and unique sum",
+          "isHidden": true
+        },
+        {
+          "id": 8,
+          "passed": true,
+          "input": "{\"nums\": [100, 200, 300, 400, 500], \"target\": 900}",
+          "expectedOutput": "[3, 4]",
+          "actualOutput": "[3, 4]",
+          "error": null,
+          "executionTimeMs": 52,
+          "explanation": "Last two elements",
+          "isHidden": true
+        },
+        {
+          "id": 9,
+          "passed": true,
+          "input": "{\"nums\": [5, 75, 25], \"target\": 100}",
+          "expectedOutput": "[1, 2]",
+          "actualOutput": "[1, 2]",
+          "error": null,
+          "executionTimeMs": 52,
+          "explanation": "Sum of 75 + 25",
+          "isHidden": true
+        },
+        {
+          "id": 10,
+          "passed": true,
+          "input": "{\"nums\": [10, -5, 20, -10, 30], \"target\": 15}",
+          "expectedOutput": "[1, 2]",
+          "actualOutput": "[1, 2]",
+          "error": null,
+          "executionTimeMs": 51,
+          "explanation": "Negative plus positive",
+          "isHidden": true
+        }
+      ],
+      "createdAt": "2026-09-05T17:11:25.448Z"
+    },
+    {
+      "id": "sub_bcef3fc8",
+      "userId": "usr_coder_1",
+      "userName": "Alex Coder",
+      "questionId": "q_two_sum",
+      "questionTitle": "Two Sum",
+      "code": "function twoSum(nums, target) { const m = {}; for(let i=0; i<nums.length; i++) { const d = target - nums[i]; if(m[d] !== undefined) return [m[d], i]; m[nums[i]] = i; } return []; }",
+      "language": "javascript",
+      "status": "Accepted",
+      "passedCount": 10,
+      "totalCount": 10,
+      "runtimeMs": 507,
+      "testResults": [
+        {
+          "id": 1,
+          "passed": true,
+          "input": "{\"nums\": [2, 7, 11, 15], \"target\": 9}",
+          "expectedOutput": "[0, 1]",
+          "actualOutput": "[0,1]",
+          "error": null,
+          "executionTimeMs": 57,
+          "explanation": "Standard example",
+          "isHidden": false
+        },
+        {
+          "id": 2,
+          "passed": true,
+          "input": "{\"nums\": [3, 2, 4], \"target\": 6}",
+          "expectedOutput": "[1, 2]",
+          "actualOutput": "[1,2]",
+          "error": null,
+          "executionTimeMs": 54,
+          "explanation": "Indices not at start",
+          "isHidden": false
+        },
+        {
+          "id": 3,
+          "passed": true,
+          "input": "{\"nums\": [3, 3], \"target\": 6}",
+          "expectedOutput": "[0, 1]",
+          "actualOutput": "[0,1]",
+          "error": null,
+          "executionTimeMs": 51,
+          "explanation": "Duplicate values",
+          "isHidden": false
+        },
+        {
+          "id": 4,
+          "passed": true,
+          "input": "{\"nums\": [-1, -2, -3, -4, -5], \"target\": -8}",
+          "expectedOutput": "[2, 4]",
+          "actualOutput": "[2,4]",
+          "error": null,
+          "executionTimeMs": 48,
+          "explanation": "Negative numbers",
+          "isHidden": false
+        },
+        {
+          "id": 5,
+          "passed": true,
+          "input": "{\"nums\": [0, 4, 3, 0], \"target\": 0}",
+          "expectedOutput": "[0, 3]",
+          "actualOutput": "[0,3]",
+          "error": null,
+          "executionTimeMs": 48,
+          "explanation": "Zero target with zeros",
+          "isHidden": true
+        },
+        {
+          "id": 6,
+          "passed": true,
+          "input": "{\"nums\": [-3, 4, 3, 90], \"target\": 0}",
+          "expectedOutput": "[0, 2]",
+          "actualOutput": "[0,2]",
+          "error": null,
+          "executionTimeMs": 51,
+          "explanation": "Positive and negative sum to zero",
+          "isHidden": true
+        },
+        {
+          "id": 7,
+          "passed": true,
+          "input": "{\"nums\": [1, 5, 7, 11, 15, 20], \"target\": 27}",
+          "expectedOutput": "[2, 5]",
+          "actualOutput": "[2,5]",
+          "error": null,
+          "executionTimeMs": 53,
+          "explanation": "Array with 6 elements and unique sum",
+          "isHidden": true
+        },
+        {
+          "id": 8,
+          "passed": true,
+          "input": "{\"nums\": [100, 200, 300, 400, 500], \"target\": 900}",
+          "expectedOutput": "[3, 4]",
+          "actualOutput": "[3,4]",
+          "error": null,
+          "executionTimeMs": 49,
+          "explanation": "Last two elements",
+          "isHidden": true
+        },
+        {
+          "id": 9,
+          "passed": true,
+          "input": "{\"nums\": [5, 75, 25], \"target\": 100}",
+          "expectedOutput": "[1, 2]",
+          "actualOutput": "[1,2]",
+          "error": null,
+          "executionTimeMs": 48,
+          "explanation": "Sum of 75 + 25",
+          "isHidden": true
+        },
+        {
+          "id": 10,
+          "passed": true,
+          "input": "{\"nums\": [10, -5, 20, -10, 30], \"target\": 15}",
+          "expectedOutput": "[1, 2]",
+          "actualOutput": "[1,2]",
+          "error": null,
+          "executionTimeMs": 48,
+          "explanation": "Negative plus positive",
+          "isHidden": true
+        }
+      ],
+      "createdAt": "2026-09-05T17:11:21.809Z"
+    }
+  ]
+}
