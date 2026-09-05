@@ -72,5 +72,13 @@ export const api = {
       body: JSON.stringify({ code, language, questionId })
     }),
   getSubmissions: (questionId) =>
-    request(`/execute/submissions${questionId ? `?questionId=${questionId}` : ''}`)
+    request(`/execute/submissions${questionId ? `?questionId=${questionId}` : ''}`),
+
+  // AI Generation & Multi-Key Failover Pool
+  generateQuestionWithAi: (idea, difficulty = 'Medium') =>
+    request('/ai/generate-question', {
+      method: 'POST',
+      body: JSON.stringify({ idea, difficulty })
+    }),
+  getAiStatus: () => request('/ai/status')
 };

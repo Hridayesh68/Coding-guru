@@ -20,12 +20,31 @@ export default function App() {
   // User state
   const [currentUser, setCurrentUser] = useState(getUser());
 
+  // Palette State (#5E3122 vs #165823)
+  const [currentPalette, setCurrentPalette] = useState(() => {
+    const saved = localStorage.getItem('app_palette') || 'earth';
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-palette', saved);
+    }
+    return saved;
+  });
+
   useEffect(() => {
     const syncAuth = () => {
       setCurrentUser(getUser());
     };
+    const syncPalette = () => {
+      const p = localStorage.getItem('app_palette') || 'earth';
+      setCurrentPalette(p);
+      document.documentElement.setAttribute('data-palette', p);
+    };
+
     window.addEventListener('auth-changed', syncAuth);
-    return () => window.removeEventListener('auth-changed', syncAuth);
+    window.addEventListener('palette-changed', syncPalette);
+    return () => {
+      window.removeEventListener('auth-changed', syncAuth);
+      window.removeEventListener('palette-changed', syncPalette);
+    };
   }, []);
 
   const handleOpenAuth = (role = 'user') => {

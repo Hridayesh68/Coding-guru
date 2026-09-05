@@ -80,16 +80,66 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
           )}
         </nav>
 
-        {/* Right Section / Auth */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        {/* Right Section / Palette Switcher & Auth */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {/* Palette Selector: #5E3122 (Earth) vs #165823 (Emerald) */}
+          <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '20px', padding: '0.2rem' }}>
+            <button
+              type="button"
+              onClick={() => {
+                document.documentElement.setAttribute('data-palette', 'earth');
+                localStorage.setItem('app_palette', 'earth');
+                window.dispatchEvent(new Event('palette-changed'));
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                padding: '0.25rem 0.6rem',
+                borderRadius: '16px',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                background: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') !== 'emerald') ? '#5E3122' : 'transparent',
+                color: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') !== 'emerald') ? '#ffffff' : 'var(--text-muted)'
+              }}
+              title="Warm Chestnut Palette (#5E3122)"
+            >
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#5E3122', border: '1px solid #c76f51' }} />
+              #5E3122
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                document.documentElement.setAttribute('data-palette', 'emerald');
+                localStorage.setItem('app_palette', 'emerald');
+                window.dispatchEvent(new Event('palette-changed'));
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                padding: '0.25rem 0.6rem',
+                borderRadius: '16px',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                background: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') === 'emerald') ? '#165823' : 'transparent',
+                color: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') === 'emerald') ? '#ffffff' : 'var(--text-muted)'
+              }}
+              title="Vibrant Emerald Palette (#165823)"
+            >
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#165823', border: '1px solid #34d399' }} />
+              #165823
+            </button>
+          </div>
+
           {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <div style={{
                   width: '2.1rem',
                   height: '2.1rem',
                   borderRadius: '50%',
-                  background: user.role === 'admin' ? 'linear-gradient(135deg, #5E3122, #a8543b)' : 'linear-gradient(135deg, #733c2a, #c76f51)',
+                  background: user.role === 'admin' ? 'linear-gradient(135deg, var(--primary), var(--primary-light))' : 'linear-gradient(135deg, var(--primary-hover), var(--accent-copper))',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -132,8 +182,7 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
                 className="btn btn-primary"
                 style={{
                   fontSize: '0.825rem',
-                  padding: '0.5rem 1rem',
-                  background: 'linear-gradient(135deg, #5E3122, #9e4f35)'
+                  padding: '0.5rem 1rem'
                 }}
               >
                 <Shield size={15} />

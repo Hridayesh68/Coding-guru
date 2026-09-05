@@ -9,9 +9,14 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
   const [description, setDescription] = useState('');
   const [jsCode, setJsCode] = useState('function solve(input) {\n  // Write solution here\n  return input;\n}');
   const [pyCode, setPyCode] = useState('def solve(input):\n    # Write solution here\n    return input');
-  const [cppCode, setCppCode] = useState('#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        cout << "answer";\n    }\n    return 0;\n}');
-  const [javaCode, setJavaCode] = useState('import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            System.out.print("answer");\n        }\n    }\n}');
+  const [cppCode, setCppCode] = useState('#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    \n}');
+  const [javaCode, setJavaCode] = useState('import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // Write solution here\n    }\n}');
   const [activeCodeLang, setActiveCodeLang] = useState('javascript');
+  
+  // AI Generation Mode State
+  const [aiIdea, setAiIdea] = useState('');
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiNotice, setAiNotice] = useState(null);
   
   // Exactly 10 test cases
   const [testCases, setTestCases] = useState(() =>
@@ -28,6 +33,49 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Handle AI Question Generation
+  const handleGenerateWithAi = async () => {
+    if (!aiIdea.trim()) {
+      setError('Please provide a question idea or prompt for the AI to generate.');
+      return;
+    }
+
+    setAiGenerating(true);
+    setError('');
+    setAiNotice(null);
+
+    try {
+      const res = await api.generateQuestionWithAi(aiIdea, difficulty);
+      if (res.success && res.question) {
+        const q = res.question;
+        if (q.title) setTitle(q.title);
+        if (q.difficulty) setDifficulty(q.difficulty);
+        if (q.tags) setTags(q.tags);
+        if (q.description) setDescription(q.description);
+        
+        if (q.starterCode) {
+          if (q.starterCode.javascript) setJsCode(q.starterCode.javascript);
+          if (q.starterCode.python) setPyCode(q.starterCode.python);
+          if (q.starterCode.cpp) setCppCode(q.starterCode.cpp);
+          if (q.starterCode.java) setJavaCode(q.starterCode.java);
+        }
+
+        if (Array.isArray(q.testCases) && q.testCases.length === 10) {
+          setTestCases(q.testCases);
+        }
+
+        setAiNotice({
+          type: 'success',
+          text: `✨ Question generated with 10 test cases and CP boilerplate via ${res.provider}!`
+        });
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to generate question with AI. Please check your AI API keys.');
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
   useEffect(() => {
     if (questionToEdit) {
       setTitle(questionToEdit.title || '');
@@ -36,8 +84,8 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
       setDescription(questionToEdit.description || '');
       setJsCode(questionToEdit.starterCode?.javascript || '');
       setPyCode(questionToEdit.starterCode?.python || '');
-      setCppCode(questionToEdit.starterCode?.cpp || '#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        cout << "answer";\n    }\n    return 0;\n}');
-      setJavaCode(questionToEdit.starterCode?.java || 'import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            System.out.print("answer");\n        }\n    }\n}');
+      setCppCode(questionToEdit.starterCode?.cpp || '#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    \n}');
+      setJavaCode(questionToEdit.starterCode?.java || 'import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Write solution\n    }\n}');
       if (Array.isArray(questionToEdit.testCases) && questionToEdit.testCases.length === 10) {
         setTestCases(questionToEdit.testCases);
       }
@@ -169,6 +217,102 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
               {error}
             </div>
           )}
+
+          {aiNotice && (
+            <div style={{
+              background: 'var(--success-bg)',
+              border: '1px solid var(--success-border)',
+              color: '#34d399',
+              padding: '0.65rem 0.85rem',
+              borderRadius: '8px',
+              fontSize: '0.825rem',
+              marginBottom: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <CheckCircle2 size={16} />
+              <span>{aiNotice.text}</span>
+            </div>
+          )}
+
+          {/* AI Mode: Prompt-to-Question Generator Card */}
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(94, 49, 34, 0.25), rgba(22, 88, 35, 0.2))',
+            border: '1px solid var(--border-focus)',
+            borderRadius: '12px',
+            padding: '1.1rem 1.25rem',
+            marginBottom: '1.5rem',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{
+                  background: 'var(--primary)',
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Sparkles size={14} color="#fff" />
+                </div>
+                <span style={{ fontWeight: 700, fontSize: '0.925rem', color: 'var(--text-primary)' }}>
+                  AI Question Generator (Multi-Key Failover Mode)
+                </span>
+              </div>
+              <span className="badge" style={{ background: 'rgba(22, 88, 35, 0.4)', color: '#34d399', border: '1px solid rgba(52, 211, 153, 0.3)' }}>
+                Gemini 2.5 + Groq Failover
+              </span>
+            </div>
+
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+              Give any concept, problem idea, or LeetCode reference. AI will automatically construct the problem description, 10 rigorous test cases (4 public + 6 hidden evaluation), and C++ CP templates.
+            </p>
+
+            <div style={{ display: 'flex', gap: '0.6rem' }}>
+              <input
+                type="text"
+                value={aiIdea}
+                onChange={(e) => setAiIdea(e.target.value)}
+                placeholder="e.g. Find minimum in rotated sorted array with duplicates, or 0/1 Knapsack with weight bounds"
+                className="form-input"
+                style={{ flex: 1, fontSize: '0.85rem' }}
+                disabled={aiGenerating}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleGenerateWithAi();
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={handleGenerateWithAi}
+                disabled={aiGenerating}
+                className="btn btn-primary"
+                style={{
+                  padding: '0.6rem 1.15rem',
+                  fontSize: '0.825rem',
+                  whiteSpace: 'nowrap',
+                  opacity: aiGenerating ? 0.7 : 1
+                }}
+              >
+                {aiGenerating ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                    Generating with AI...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={15} />
+                    Auto-Generate
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
 
           {/* Row 1: Title, Difficulty, Tags */}
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '1rem' }}>

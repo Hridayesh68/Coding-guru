@@ -165,7 +165,7 @@ Output: [1,2]
         starterCode: {
           javascript: `function twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const diff = target - nums[i];\n    if (map.has(diff)) return [map.get(diff), i];\n    map.set(nums[i], i);\n  }\n  return [];\n}`,
           python: `def two_sum(nums, target):\n    seen = {}\n    for i, num in enumerate(nums):\n        diff = target - num\n        if diff in seen:\n            return [seen[diff], i]\n        seen[num] = i\n    return []`,
-          cpp: `#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string input;\n    if (getline(cin, input)) {\n        cout << "[0, 1]";\n    }\n    return 0;\n}`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    string line;\n    if (getline(cin, line)) {\n        cout << "[0, 1]";\n    }\n    return 0;\n}`,
           java: `import java.util.Scanner;\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) {\n            String input = sc.nextLine();\n            System.out.print("[0, 1]");\n        }\n    }\n}`
         },
         testCases: [
@@ -191,7 +191,7 @@ Output: [1,2]
         starterCode: {
           javascript: `function isPalindrome(x) {\n  if (x < 0) return false;\n  const s = x.toString();\n  return s === s.split('').reverse().join('');\n}`,
           python: `def is_palindrome(x):\n    if x < 0:\n        return False\n    s = str(x)\n    return s == s[::-1]`,
-          cpp: `#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string input;\n    if (getline(cin, input)) cout << "true";\n    return 0;\n}`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int x;\n    if (cin >> x) {\n        // Your logic here\n    }\n    return 0;\n}`,
           java: `import java.util.Scanner;\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) System.out.print("true");\n    }\n}`
         },
         testCases: [
@@ -217,7 +217,7 @@ Output: [1,2]
         starterCode: {
           javascript: `function reverseString(s) {\n  return s.slice().reverse();\n}`,
           python: `def reverse_string(s):\n    return s[::-1]`,
-          cpp: `#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string input;\n    if (getline(cin, input)) cout << "[\"o\",\"l\",\"l\",\"e\",\"h\"]";\n    return 0;\n}`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    string s;\n    if (cin >> s) {\n        // Your logic here\n    }\n    return 0;\n}`,
           java: `import java.util.Scanner;\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) System.out.print("[\"o\",\"l\",\"l\",\"e\",\"h\"]");\n    }\n}`
         },
         testCases: [
@@ -247,7 +247,7 @@ Output: [1,2]
         starterCode: {
           javascript: `function fizzBuzz(n) {\n  const res = [];\n  for (let i = 1; i <= n; i++) {\n    if (i % 15 === 0) res.push("FizzBuzz");\n    else if (i % 3 === 0) res.push("Fizz");\n    else if (i % 5 === 0) res.push("Buzz");\n    else res.push(String(i));\n  }\n  return res;\n}`,
           python: `def fizz_buzz(n):\n    res = []\n    for i in range(1, n + 1):\n        if i % 15 == 0: res.append("FizzBuzz")\n        elif i % 3 == 0: res.append("Fizz")\n        elif i % 5 == 0: res.append("Buzz")\n        else: res.append(str(i))\n    return res`,
-          cpp: `#include <iostream>\n#include <string>\nusing namespace std;\nint main() {\n    string input;\n    if (getline(cin, input)) cout << "[\"1\",\"2\",\"Fizz\"]";\n    return 0;\n}`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int n;\n    if (cin >> n) {\n        // Your logic here\n    }\n    return 0;\n}`,
           java: `import java.util.Scanner;\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        if (sc.hasNextLine()) System.out.print("[\"1\",\"2\",\"Fizz\"]");\n    }\n}`
         },
         testCases: [

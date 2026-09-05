@@ -54,9 +54,9 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
             <option value="java">Java (OpenJDK 21)</option>
           </select>
 
-          <span className="badge" style={{ background: 'rgba(94, 49, 34, 0.35)', color: '#d1beaf', fontSize: '0.7rem', border: '1px solid rgba(199, 111, 81, 0.3)' }}>
+          <span className="badge" style={{ background: 'rgba(94, 49, 34, 0.35)', color: '#d1beaf', fontSize: '0.7rem', border: '1px solid rgba(199, 111, 81, 0.3)' }} title="Your preferred language is saved and remembered for all questions">
             <Sparkles size={11} color="#c76f51" />
-            Monaco Engine
+            Preferred Default
           </span>
         </div>
 

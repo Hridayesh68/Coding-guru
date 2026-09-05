@@ -1,4 +1,4 @@
-:root {
+:root, [data-palette="earth"] {
   /* Warm Luxury Chestnut Palette (#5E3122) */
   --bg-primary: #0e0907;
   --bg-secondary: #17100d;
@@ -36,6 +36,29 @@
   --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+[data-palette="emerald"], html[data-palette="emerald"] {
+  /* Vibrant Forest Emerald Palette (#165823) */
+  --bg-primary: #061108;
+  --bg-secondary: #0b1a0e;
+  --bg-card: #102615;
+  --bg-card-hover: #16361d;
+  --bg-elevated: #1d4626;
+  --border-subtle: #1c4724;
+  --border-focus: #288039;
+  --text-primary: #f2fcf4;
+  --text-secondary: #bce3c5;
+  --text-muted: #6e9a77;
+  
+  --primary: #165823;
+  --primary-hover: #1c6d2c;
+  --primary-light: #288039;
+  --primary-glow: rgba(22, 88, 35, 0.45);
+  
+  --accent-copper: #34d399;
+  --accent-amber: #6ee7b7;
+  --accent-gold: #10b981;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -54,6 +77,15 @@ body {
     radial-gradient(circle at 85% 85%, rgba(199, 111, 81, 0.12) 0%, transparent 45%),
     radial-gradient(circle at 50% 50%, rgba(94, 49, 34, 0.08) 0%, transparent 60%);
   background-attachment: fixed;
+  transition: background-color 0.3s ease;
+}
+
+[data-palette="emerald"] body,
+html[data-palette="emerald"] body {
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(22, 88, 35, 0.35) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(52, 211, 153, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(22, 88, 35, 0.09) 0%, transparent 60%);
 }
 
 /* Custom Scrollbars */

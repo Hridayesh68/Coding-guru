@@ -4,13 +4,17 @@ import CodeEditor from '../components/CodeEditor';
 import TestCaseRunner from '../components/TestCaseRunner';
 import { api } from '../utils/api';
 import { isAuthenticated, getUser } from '../utils/auth';
+import { getBoilerplate } from '../utils/boilerplates';
 
 export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
   const [question, setQuestion] = useState(null);
   const [loading, setLoading] = useState(true);
   const [leftTab, setLeftTab] = useState('description'); // 'description' | 'submissions'
   
-  const [language, setLanguage] = useState('javascript');
+  // Initialize with preferred coding language from localStorage (defaults to cpp or user choice)
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem('preferred_coding_language') || 'cpp';
+  });
   const [code, setCode] = useState('');
   
   // Execution states
@@ -27,7 +31,10 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
       const res = await api.getQuestionById(questionId);
       if (res.question) {
         setQuestion(res.question);
-        setCode(res.question.starterCode?.javascript || '// Write your code here');
+        const preferred = localStorage.getItem('preferred_coding_language') || 'cpp';
+        setLanguage(preferred);
+        const initialCode = res.question.starterCode?.[preferred] || getBoilerplate(preferred);
+        setCode(initialCode);
       }
     } catch (err) {
       console.error('Failed to load question:', err);
@@ -52,18 +59,23 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
     loadSubmissions();
   }, [questionId]);
 
-  // Handle language switch
+  // Handle language switch and save preference across problems
   const handleLanguageChange = (newLang) => {
     setLanguage(newLang);
+    localStorage.setItem('preferred_coding_language', newLang);
     if (question?.starterCode?.[newLang]) {
       setCode(question.starterCode[newLang]);
+    } else {
+      setCode(getBoilerplate(newLang));
     }
   };
 
-  // Reset to starter code
+  // Reset to starter code or boilerplate
   const handleReset = () => {
     if (question?.starterCode?.[language]) {
       setCode(question.starterCode[language]);
+    } else {
+      setCode(getBoilerplate(language));
     }
   };
 
