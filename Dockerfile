@@ -39,16 +39,17 @@ COPY --from=frontend-builder /app/frontend/dist ./dist
 # Create SQLite data directory and temporary execution sandbox
 RUN mkdir -p /app/db/data /tmp/coding-guru-executions
 
-# Environment configuration
+# Non-sensitive defaults only — secrets MUST be injected via --env-file at runtime
 ENV NODE_ENV=production
 ENV PORT=5000
-ENV JWT_SECRET=supersecret_jwt_coding_guru_key_2026_x7a9
-ENV ADMIN_INVITE_KEY=admin123
 
 EXPOSE 5000
 
 # Volume for persistent SQLite database storage
 VOLUME ["/app/db/data"]
 
-# Start the unified full-stack server
+# The .env file is expected to be mounted at /app/.env at container start:
+#   docker run --env-file .env -p 5000:5000 hridayesh68/coding-guru
+# Or bind-mount it:
+#   docker run -v $(pwd)/.env:/app/.env -p 5000:5000 hridayesh68/coding-guru
 CMD ["node", "server.js"]
