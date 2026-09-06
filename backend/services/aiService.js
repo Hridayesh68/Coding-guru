@@ -33,12 +33,38 @@ function getGroqKeys() {
 const CPP_CP_TEMPLATE = `#include <bits/stdc++.h>
 using namespace std;
 
-int main(){
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
 
+    // Read input (integer or string) from standard input
     
+
+    return 0;
 }`;
+
+const JAVA_CP_TEMPLATE = `import java.util.*;
+import java.io.*;
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read input (integer or string) from standard input
+
+    }
+}`;
+
+const PYTHON_CP_TEMPLATE = `import sys
+
+def solve():
+    # Read input (integer or string) from standard input
+    lines = sys.stdin.read().split()
+    if not lines:
+        return
+
+if __name__ == '__main__':
+    solve()`;
 
 /**
  * Call Gemini API with a specific key
@@ -170,30 +196,35 @@ Given a problem idea or concept, generate a complete, rigorous coding challenge 
 Requirements:
 1. "title": Concise, professional title (e.g. "Longest Palindromic Substring")
 2. "difficulty": "Easy", "Medium", or "Hard" (honor the preference if provided)
-3. "tags": Space-separated tags (e.g. "String Dynamic Programming Two Pointers")
+3. "tags": Space-separated tags (e.g. "String Dynamic Programming Two Pointers", "Tree Binary Tree", "Array Hash Table")
 4. "description": Rich Markdown problem description including:
    - Clear problem statement
-   - Input Format
-   - Output Format
+   - Input Format: Standard I/O (integer or string values)
+   - Output Format: Standard I/O
    - Constraints (e.g., 1 <= n <= 10^5, time limit 2s)
    - 2 clear examples with explanation
 5. "testCases": An array of EXACTLY 10 test cases:
    - IDs: 1 to 10.
    - id 1 to 4 MUST have "isHidden": false (sample/public test cases)
    - id 5 to 10 MUST have "isHidden": true (hidden evaluation test cases)
+   - CRITICAL INPUT/OUTPUT REQUIREMENT:
+     - The input should ALWAYS be integer or string (space-separated integers or strings, or single integer/string across lines).
+     - NEVER use JSON objects or JSON strings (e.g. NEVER {"nums": [1,2]} or {"val": 5}).
+     - Expected output should ALWAYS be raw integer or string (e.g. "42", "true", "hello", "0 1"). NEVER JSON array or JSON object.
    - Each test case MUST have:
      - "id": integer (1 to 10)
-     - "input": string representation of input (e.g., "5 2 7 11 15" or JSON string)
-     - "expectedOutput": exact expected output string
+     - "input": raw integer or string input for stdin (e.g. "5 2 7 11 15" or "hello\\nworld" or "121")
+     - "expectedOutput": raw expected output for stdout
      - "explanation": brief explanation of why this output is correct
      - "isHidden": boolean
-   - Test cases MUST cover: basic cases, negative numbers, edge boundary cases (minimum/maximum constraints), and large inputs.
-6. "starterCode": An object containing starter code for 4 languages:
-   - "javascript": Starter template
-   - "python": Starter template
-   - "cpp": MUST follow this competitive programming boilerplate:
+   - Test cases MUST cover: basic cases, negative numbers, edge boundary cases, and large inputs.
+6. "starterCode": An object containing starter code for exactly 3 languages (C++, Java, Python - NO Javascript):
+   - "cpp": MUST follow this competitive programming boilerplate with stdin reading:
 ${CPP_CP_TEMPLATE}
-   - "java": Clean Java solution template with public class Solution
+   - "java": Clean Java solution template with public class Solution and main reading from stdin:
+${JAVA_CP_TEMPLATE}
+   - "python": Clean Python solution template reading from stdin:
+${PYTHON_CP_TEMPLATE}
 
 Return ONLY valid JSON matching this schema:
 {
@@ -206,10 +237,9 @@ Return ONLY valid JSON matching this schema:
     ... exactly 10 items ...
   ],
   "starterCode": {
-    "javascript": "...",
-    "python": "...",
     "cpp": "...",
-    "java": "..."
+    "java": "...",
+    "python": "..."
   }
 }`;
 
@@ -217,7 +247,11 @@ Return ONLY valid JSON matching this schema:
 Idea / Concept: "${userIdea}"
 Target Difficulty: "${difficultyPreference}"
 
-Ensure exactly 10 test cases are generated and C++ code uses the Competitive Programming template!`;
+CRITICAL:
+- Input should ALWAYS be integer or string (never JSON strings like {"val": 1}).
+- Output should ALWAYS be raw integer or string.
+- Provide starter code ONLY for cpp, java, and python (NO javascript).
+- Ensure exactly 10 test cases are generated!`;
 
   const result = await executeAiWithFailover(systemInstruction, prompt);
   return result;

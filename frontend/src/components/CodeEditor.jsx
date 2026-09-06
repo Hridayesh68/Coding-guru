@@ -8,9 +8,8 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
 
   // Map our language key to Monaco editor language
   const monacoLanguageMap = {
-    javascript: 'javascript',
-    python: 'python',
     cpp: 'cpp',
+    python: 'python',
     java: 'java'
   };
 
@@ -48,9 +47,8 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
               color: '#e59866'
             }}
           >
-            <option value="javascript">JavaScript (Node.js v20)</option>
-            <option value="python">Python (v3.12)</option>
             <option value="cpp">C++ (GCC 13.1 C++17)</option>
+            <option value="python">Python (v3.12)</option>
             <option value="java">Java (OpenJDK 21)</option>
           </select>
 
@@ -112,7 +110,7 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
       <div style={{ height: '430px', background: editorTheme === 'vs-dark' ? '#140d0a' : '#ffffff' }}>
         <Editor
           height="100%"
-          language={monacoLanguageMap[language] || 'javascript'}
+          language={monacoLanguageMap[language] || 'cpp'}
           value={code}
           onChange={(val) => onChange(val || '')}
           theme={editorTheme}

@@ -94,10 +94,9 @@ export const createQuestion = async (req, res) => {
       tags: Array.isArray(tags) ? tags : (typeof tags === 'string' ? tags.split(',').map((t) => t.trim()) : ['Algorithm']),
       description,
       starterCode: starterCode || {
-        javascript: 'function solve(input) {\n  // Write your code here\n}',
-        python: 'def solve(input):\n    # Write your code here\n    pass',
-        cpp: '#include <iostream>\nusing namespace std;\nint main() { return 0; }',
-        java: 'public class Solution { public static void main(String[] args) {} }'
+        cpp: '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    // Read input (integer or string)\n\n    return 0;\n}',
+        java: 'import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        // Read input (integer or string)\n\n    }\n}',
+        python: 'import sys\n\ndef solve():\n    lines = sys.stdin.read().split()\n    if not lines:\n        return\n    # Read input (integer or string)\n\nif __name__ == "__main__":\n    solve()'
       },
       testCases: formattedTestCases,
       createdBy: req.user.id,

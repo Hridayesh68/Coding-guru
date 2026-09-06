@@ -1,53 +1,44 @@
-export const CPP_CP_TEMPLATE = `#include <bits/stdc++.h>
+// ─────────────────────────────────────────────────
+// Minimal starter-code boilerplates for supported languages:
+// C++, Java, Python.
+// Every language follows standard competitive programming convention:
+// Read input (integer or string) from STDIN, write to STDOUT.
+// ─────────────────────────────────────────────────
+
+export const DEFAULT_BOILERPLATES = {
+  cpp: `#include <bits/stdc++.h>
 using namespace std;
 
-int main(){
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL);
 
+    // Read input (integer or string) from standard input
     
-}`;
 
-export const DEFAULT_BOILERPLATES = {
-  cpp: CPP_CP_TEMPLATE,
-  javascript: `// JavaScript (Node.js) Starter Template
-const readline = require('readline');
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-
-rl.on('line', (line) => {
-    // Process input
-});`,
-  python: `# Python 3 Starter Template
-import sys
-
-def main():
-    input_data = sys.stdin.read().split()
-    if not input_data:
-        return
-
-if __name__ == '__main__':
-    main()`,
+    return 0;
+}`,
   java: `import java.util.*;
 import java.io.*;
 
 public class Solution {
     public static void main(String[] args) {
-        FastScanner fs = new FastScanner();
-        // Read input
+        Scanner sc = new Scanner(System.in);
+
+        // Read input (integer or string) from standard input
+
     }
-    
-    static class FastScanner {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer("");
-        String next() {
-            while (!st.hasMoreTokens()) {
-                try { st = new StringTokenizer(br.readLine()); } catch (Exception e) {}
-            }
-            return st.nextToken();
-        }
-        int nextInt() { return Integer.parseInt(next()); }
-    }
-}`
+}`,
+  python: `import sys
+
+def solve():
+    # Read input (integer or string) from standard input
+    lines = sys.stdin.read().split()
+    if not lines:
+        return
+
+if __name__ == '__main__':
+    solve()`
 };
 
 export function getBoilerplate(lang) {

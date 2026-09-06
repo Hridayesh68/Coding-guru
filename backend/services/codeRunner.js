@@ -9,64 +9,34 @@ if (!fs.existsSync(TEMP_DIR)) {
   fs.mkdirSync(TEMP_DIR, { recursive: true });
 }
 
-// Normalize output for robust comparison
+// ─────────────────────────────────────────────────
+// Output comparison
+// ─────────────────────────────────────────────────
+
 export const normalizeOutput = (val) => {
   if (val === null || val === undefined) return '';
-  const trimmed = String(val).trim();
-  try {
-    const parsed = JSON.parse(trimmed);
-    return JSON.stringify(parsed);
-  } catch {
-    return trimmed;
-  }
+  return String(val).trim().replace(/\r\n/g, '\n');
 };
 
 export const areOutputsEqual = (actual, expected) => {
-  const normActual = normalizeOutput(actual);
-  const normExpected = normalizeOutput(expected);
-
-  if (normActual === normExpected) return true;
-
-  // Try parsing both as JSON and comparing
-  try {
-    const actObj = JSON.parse(normActual);
-    const expObj = JSON.parse(normExpected);
-
-    if (Array.isArray(actObj) && Array.isArray(expObj) && actObj.length === expObj.length) {
-      if (JSON.stringify(actObj.slice().sort()) === JSON.stringify(expObj.slice().sort())) {
-        return true;
-      }
-    }
-  } catch {}
-
-  return false;
+  const a = normalizeOutput(actual);
+  const b = normalizeOutput(expected);
+  return a === b;
 };
 
-// Detect function names
-function findJsFunctionName(code) {
-  const fnMatch = code.match(/function\s+([a-zA-Z0-9_$]+)\s*\(/);
-  if (fnMatch) return fnMatch[1];
-  const constMatch = code.match(/(?:const|let|var)\s+([a-zA-Z0-9_$]+)\s*=\s*(?:function|\([^)]*\)\s*=>|[a-zA-Z0-9_$]+\s*=>)/);
-  if (constMatch) return constMatch[1];
-  return null;
-}
+// ─────────────────────────────────────────────────
+// Precompile C++ / Java (unchanged from before)
+// ─────────────────────────────────────────────────
 
-function findPyFunctionName(code) {
-  const match = code.match(/def\s+([a-zA-Z0-9_]+)\s*\(/);
-  if (match) return match[1];
-  return null;
-}
-
-// Precompile C++ and Java code before running test cases
 export const precompileCode = async ({ code, language, sessionId }) => {
   if (language === 'cpp') {
     const cppFile = path.join(TEMP_DIR, `exec_${sessionId}.cpp`);
     const exeFile = path.join(TEMP_DIR, `exec_${sessionId}.exe`);
 
-    // Ensure standard headers are included if missing
+    // Ensure standard headers are included if bits/stdc++.h is missing
     let fullCode = code;
-    if (!fullCode.includes('#include <iostream>')) {
-      fullCode = `#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n#include <map>\n#include <sstream>\n` + fullCode;
+    if (!fullCode.includes('#include')) {
+      fullCode = `#include <bits/stdc++.h>\nusing namespace std;\n` + fullCode;
     }
 
     fs.writeFileSync(cppFile, fullCode, 'utf-8');
@@ -96,7 +66,6 @@ export const precompileCode = async ({ code, language, sessionId }) => {
       fs.mkdirSync(javaDir, { recursive: true });
     }
 
-    // Extract class name or default to Solution
     let className = 'Solution';
     const classMatch = code.match(/public\s+class\s+([a-zA-Z0-9_$]+)/);
     if (classMatch) {
@@ -130,253 +99,102 @@ export const precompileCode = async ({ code, language, sessionId }) => {
   return { success: true };
 };
 
-// Execute single test case
-export const executeSingleTestCase = ({ code, language, inputStr, timeoutMs = 4000, compiledInfo }) => {
+// ─────────────────────────────────────────────────
+// Execute a single test case — ALL languages use
+// pure stdin → stdout piping. No JSON wrappers,
+// no function-name detection magic.
+// ─────────────────────────────────────────────────
+
+export const executeSingleTestCase = ({ code, language, inputStr, timeoutMs = 5000, compiledInfo }) => {
   return new Promise((resolve) => {
     const id = uuidv4();
     const startTime = Date.now();
 
-    if (language === 'javascript') {
-      const fnName = findJsFunctionName(code);
-      if (!fnName) {
-        return resolve({
-          success: false,
-          output: '',
-          error: 'No valid function declaration found in JavaScript code.',
-          executionTimeMs: 0
-        });
-      }
-
-      const script = `
-${code}
-
-try {
-  const rawInput = ${JSON.stringify(inputStr)};
-  let parsedInput;
-  try {
-    parsedInput = JSON.parse(rawInput);
-  } catch (e) {
-    parsedInput = rawInput;
-  }
-
-  let result;
-  if (typeof parsedInput === 'object' && parsedInput !== null && !Array.isArray(parsedInput)) {
-    result = ${fnName}(...Object.values(parsedInput));
-  } else if (Array.isArray(parsedInput)) {
-    result = ${fnName}(parsedInput);
-  } else {
-    result = ${fnName}(parsedInput);
-  }
-
-  if (result === undefined) {
-    process.stdout.write("undefined");
-  } else {
-    process.stdout.write(JSON.stringify(result));
-  }
-} catch (err) {
-  process.stderr.write(err.stack || String(err));
-  process.exit(1);
-}
-`;
-
-      const filePath = path.join(TEMP_DIR, `run_${id}.js`);
-      fs.writeFileSync(filePath, script, 'utf-8');
-
-      execFile('node', [filePath], { timeout: timeoutMs, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
-        const executionTimeMs = Date.now() - startTime;
-        try { fs.unlinkSync(filePath); } catch {}
-
-        if (error) {
-          if (error.killed || error.signal === 'SIGTERM') {
-            return resolve({
-              success: false,
-              output: '',
-              error: `Time Limit Exceeded (${timeoutMs}ms)`,
-              executionTimeMs
-            });
-          }
-          return resolve({
-            success: false,
-            output: stdout.trim(),
-            error: stderr.trim() || error.message,
-            executionTimeMs
-          });
+    const handleResult = (error, stdout, stderr) => {
+      const executionTimeMs = Date.now() - startTime;
+      if (error) {
+        if (error.killed || error.signal === 'SIGTERM') {
+          return resolve({ success: false, output: '', error: `Time Limit Exceeded (${timeoutMs}ms)`, executionTimeMs });
         }
-
-        return resolve({
-          success: true,
-          output: stdout.trim(),
-          error: null,
-          executionTimeMs
-        });
-      });
-    } else if (language === 'python') {
-      const fnName = findPyFunctionName(code);
-      if (!fnName) {
-        return resolve({
-          success: false,
-          output: '',
-          error: 'No valid "def function_name(...):" declaration found in Python code.',
-          executionTimeMs: 0
-        });
+        return resolve({ success: false, output: stdout?.trim() || '', error: stderr?.trim() || error.message, executionTimeMs });
       }
+      return resolve({ success: true, output: stdout.trim(), error: null, executionTimeMs });
+    };
 
-      const script = `
-import sys
-import json
-
-${code}
-
-try:
-    raw_input_str = ${JSON.stringify(inputStr)}
-    try:
-        parsed_input = json.loads(raw_input_str)
-    except Exception:
-        parsed_input = raw_input_str
-
-    if isinstance(parsed_input, dict):
-        result = ${fnName}(*list(parsed_input.values()))
-    else:
-        result = ${fnName}(parsed_input)
-
-    sys.stdout.write(json.dumps(result))
-except Exception as e:
-    import traceback
-    sys.stderr.write(traceback.format_exc())
-    sys.exit(1)
-`;
-
+    if (language === 'python') {
       const filePath = path.join(TEMP_DIR, `run_${id}.py`);
-      fs.writeFileSync(filePath, script, 'utf-8');
+      fs.writeFileSync(filePath, code, 'utf-8');
 
-      execFile('python', [filePath], { timeout: timeoutMs, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
-        const executionTimeMs = Date.now() - startTime;
-        try { fs.unlinkSync(filePath); } catch {}
+      const primaryPy = process.platform === 'win32' ? 'python' : 'python3';
+      const fallbackPy = process.platform === 'win32' ? 'py' : 'python';
 
-        if (error) {
-          if (error.killed || error.signal === 'SIGTERM') {
-            return resolve({
-              success: false,
-              output: '',
-              error: `Time Limit Exceeded (${timeoutMs}ms)`,
-              executionTimeMs
-            });
+      const runWithPython = (cmd, onFail) => {
+        const child = execFile(cmd, [filePath], { timeout: timeoutMs, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
+          const isStoreAlias = stderr && stderr.includes('Python was not found');
+          if ((error && error.code === 'ENOENT') || isStoreAlias) {
+            if (onFail) return onFail();
           }
-          return resolve({
-            success: false,
-            output: stdout.trim(),
-            error: stderr.trim() || error.message,
-            executionTimeMs
-          });
-        }
+          try { fs.unlinkSync(filePath); } catch {}
+          handleResult(error, stdout, stderr);
+        });
 
-        return resolve({
-          success: true,
-          output: stdout.trim(),
-          error: null,
-          executionTimeMs
+        child.stdin.write(inputStr + '\n');
+        child.stdin.end();
+      };
+
+      runWithPython(primaryPy, () => {
+        runWithPython(fallbackPy, () => {
+          try { fs.unlinkSync(filePath); } catch {}
+          resolve({ success: false, output: '', error: 'Python runtime not found.', executionTimeMs: 0 });
         });
       });
+
+    } else if (language === 'javascript') {
+      return resolve({ success: false, output: '', error: 'JavaScript execution is currently disabled. Please use C++, Python, or Java.', executionTimeMs: 0 });
+
     } else if (language === 'cpp') {
       if (!compiledInfo?.binaryPath) {
-        return resolve({
-          success: false,
-          output: '',
-          error: 'C++ binary not found.',
-          executionTimeMs: 0
-        });
+        return resolve({ success: false, output: '', error: 'C++ binary not found.', executionTimeMs: 0 });
       }
 
       const child = execFile(compiledInfo.binaryPath, { timeout: timeoutMs, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
-        const executionTimeMs = Date.now() - startTime;
-        if (error) {
-          if (error.killed || error.signal === 'SIGTERM') {
-            return resolve({
-              success: false,
-              output: '',
-              error: `Time Limit Exceeded (${timeoutMs}ms)`,
-              executionTimeMs
-            });
-          }
-          return resolve({
-            success: false,
-            output: stdout.trim(),
-            error: stderr.trim() || error.message,
-            executionTimeMs
-          });
-        }
-
-        return resolve({
-          success: true,
-          output: stdout.trim(),
-          error: null,
-          executionTimeMs
-        });
+        handleResult(error, stdout, stderr);
       });
 
       child.stdin.write(inputStr + '\n');
       child.stdin.end();
+
     } else if (language === 'java') {
       if (!compiledInfo?.javaDir || !compiledInfo?.className) {
-        return resolve({
-          success: false,
-          output: '',
-          error: 'Java classes not found.',
-          executionTimeMs: 0
-        });
+        return resolve({ success: false, output: '', error: 'Java classes not found.', executionTimeMs: 0 });
       }
 
       const child = execFile('java', ['-cp', compiledInfo.javaDir, compiledInfo.className], { timeout: timeoutMs, maxBuffer: 1024 * 1024 }, (error, stdout, stderr) => {
-        const executionTimeMs = Date.now() - startTime;
-        if (error) {
-          if (error.killed || error.signal === 'SIGTERM') {
-            return resolve({
-              success: false,
-              output: '',
-              error: `Time Limit Exceeded (${timeoutMs}ms)`,
-              executionTimeMs
-            });
-          }
-          return resolve({
-            success: false,
-            output: stdout.trim(),
-            error: stderr.trim() || error.message,
-            executionTimeMs
-          });
-        }
-
-        return resolve({
-          success: true,
-          output: stdout.trim(),
-          error: null,
-          executionTimeMs
-        });
+        handleResult(error, stdout, stderr);
       });
 
       child.stdin.write(inputStr + '\n');
       child.stdin.end();
+
     } else {
-      return resolve({
-        success: false,
-        output: '',
-        error: `Language "${language}" is not supported. Choose "javascript", "python", "cpp", or "java".`,
-        executionTimeMs: 0
-      });
+      return resolve({ success: false, output: '', error: `Language "${language}" is not supported.`, executionTimeMs: 0 });
     }
   });
 };
 
-// Evaluate code against an array of test cases (e.g. all 10 test cases)
+// ─────────────────────────────────────────────────
+// Evaluate code against all test cases
+// ─────────────────────────────────────────────────
+
 export const evaluateAllTestCases = async ({ code, language, testCases }) => {
   const normLang = language.toLowerCase();
   const sessionId = uuidv4().slice(0, 8);
 
-  // Step 1: Precompile if language requires compilation (C++ or Java)
+  // Step 1: Precompile if needed (C++ or Java)
   let compiledInfo = null;
   if (normLang === 'cpp' || normLang === 'java') {
     compiledInfo = await precompileCode({ code, language: normLang, sessionId });
     if (!compiledInfo.success) {
-      // Return compilation error immediately for all test cases
       return {
         status: 'Compilation Error',
         passedCount: 0,
@@ -407,7 +225,7 @@ export const evaluateAllTestCases = async ({ code, language, testCases }) => {
         code,
         language: normLang,
         inputStr: tc.input,
-        timeoutMs: 4000,
+        timeoutMs: 5000,
         compiledInfo
       });
 

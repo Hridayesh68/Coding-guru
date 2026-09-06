@@ -3,11 +3,23 @@ import { Search, CheckCircle2, ChevronRight, Code2, Sparkles, Filter, Shield, Aw
 import { api } from '../utils/api';
 import { isAuthenticated, isAdmin } from '../utils/auth';
 
+const CATEGORIES = [
+  { id: 'All', label: 'All Categories', match: () => true },
+  { id: 'Array', label: 'Arrays', match: (tags) => tags.some((t) => /array/i.test(t)) },
+  { id: 'String', label: 'Strings', match: (tags) => tags.some((t) => /string/i.test(t)) },
+  { id: 'Tree', label: 'Trees', match: (tags) => tags.some((t) => /tree/i.test(t)) },
+  { id: 'Math', label: 'Math', match: (tags) => tags.some((t) => /math/i.test(t)) },
+  { id: 'Dynamic Programming', label: 'Dynamic Programming', match: (tags) => tags.some((t) => /dynamic programming/i.test(t)) },
+  { id: 'Hash Table', label: 'Hash Table', match: (tags) => tags.some((t) => /hash table/i.test(t)) },
+  { id: 'Two Pointers', label: 'Two Pointers', match: (tags) => tags.some((t) => /two pointers/i.test(t)) }
+];
+
 export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('All');
+  const [categoryFilter, setCategoryFilter] = useState('All');
   const [error, setError] = useState('');
 
   const fetchQuestions = async () => {
@@ -30,11 +42,23 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
   }, []);
 
   const filteredQuestions = questions.filter((q) => {
+    const qTags = Array.isArray(q.tags) ? q.tags : [];
     const matchesSearch =
       q.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      q.tags?.some((t) => t.toLowerCase().includes(searchTerm.toLowerCase()));
+      qTags.some((t) => t.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesDifficulty = difficultyFilter === 'All' || q.difficulty === difficultyFilter;
-    return matchesSearch && matchesDifficulty;
+
+    let matchesCategory = true;
+    if (categoryFilter !== 'All') {
+      const catObj = CATEGORIES.find((c) => c.id === categoryFilter);
+      if (catObj && catObj.match) {
+        matchesCategory = catObj.match(qTags);
+      } else {
+        matchesCategory = qTags.some((t) => t.toLowerCase().includes(categoryFilter.toLowerCase()));
+      }
+    }
+
+    return matchesSearch && matchesDifficulty && matchesCategory;
   });
 
   const solvedCount = questions.filter((q) => q.isSolved).length;
@@ -80,7 +104,7 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
           fontSize: '1.05rem',
           lineHeight: 1.6
         }}>
-          Solve coding challenges in <strong>C++, Java, Python, or JavaScript</strong>. Every submission is rigorously evaluated against <strong>10 comprehensive test cases</strong> to guarantee full edge-case coverage.
+          Solve coding challenges in <strong>C++, Java, or Python</strong>. Every submission is rigorously evaluated against <strong>10 comprehensive test cases</strong> to guarantee full edge-case coverage.
         </p>
 
         {/* Highlight Stats Strip */}
@@ -102,7 +126,7 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
           </div>
           <div className="glass-panel" style={{ padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Supported Languages</div>
-            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#c76f51' }}>JS, Py, C++, Java</div>
+            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#c76f51' }}>C++, Java, Python</div>
           </div>
           <div className="glass-panel" style={{ padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Your Solved</div>
@@ -112,7 +136,7 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
       </section>
 
       {/* Filter & Search Bar */}
-      <div className="glass-panel" style={{ padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div className="glass-panel" style={{ padding: '1rem 1.25rem', marginBottom: '1rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>
         {/* Search */}
         <div style={{ position: 'relative', flex: '1', minWidth: '240px' }}>
           <input
@@ -145,6 +169,65 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Category / Topic Filters Bar */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.5rem',
+        flexWrap: 'wrap',
+        marginBottom: '1.5rem',
+        padding: '0.75rem 1rem',
+        borderRadius: '12px',
+        background: 'rgba(23, 16, 13, 0.55)',
+        border: '1px solid var(--border-subtle)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#c76f51', fontSize: '0.825rem', fontWeight: 700, paddingRight: '0.75rem', borderRight: '1px solid var(--border-subtle)' }}>
+          <Filter size={15} />
+          <span>Category:</span>
+        </div>
+
+        {CATEGORIES.map((cat) => {
+          const isSelected = categoryFilter === cat.id;
+          const count = cat.id === 'All'
+            ? questions.length
+            : questions.filter((q) => cat.match(Array.isArray(q.tags) ? q.tags : [])).length;
+
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setCategoryFilter(cat.id)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '9999px',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+                border: '1px solid',
+                borderColor: isSelected ? 'var(--border-focus)' : 'var(--border-subtle)',
+                background: isSelected ? 'linear-gradient(135deg, var(--primary), #823c25)' : 'rgba(26, 17, 13, 0.75)',
+                color: isSelected ? '#ffffff' : 'var(--text-secondary)'
+              }}
+            >
+              <span>{cat.label}</span>
+              <span style={{
+                fontSize: '0.68rem',
+                padding: '0.1rem 0.4rem',
+                borderRadius: '9999px',
+                background: isSelected ? 'rgba(0, 0, 0, 0.35)' : 'rgba(255, 255, 255, 0.08)',
+                color: isSelected ? '#ffffff' : 'var(--text-muted)',
+                fontWeight: 700
+              }}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Questions Table */}
@@ -204,7 +287,18 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
                       </div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
                         {q.tags?.map((t, idx) => (
-                          <span key={idx} className="badge-tag">
+                          <span
+                            key={idx}
+                            className="badge-tag"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const matched = CATEGORIES.find((c) => c.id !== 'All' && c.match([t]));
+                              if (matched) setCategoryFilter(matched.id);
+                              else setSearchTerm(t);
+                            }}
+                            style={{ cursor: 'pointer' }}
+                            title={`Filter by ${t}`}
+                          >
                             {t}
                           </span>
                         ))}

@@ -11,10 +11,13 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
   const [loading, setLoading] = useState(true);
   const [leftTab, setLeftTab] = useState('description'); // 'description' | 'submissions'
   
-  // Initialize with preferred coding language from localStorage (defaults to cpp or user choice)
-  const [language, setLanguage] = useState(() => {
-    return localStorage.getItem('preferred_coding_language') || 'cpp';
-  });
+  // Supported languages: cpp, python, java
+  const getInitialLanguage = () => {
+    const saved = localStorage.getItem('preferred_coding_language');
+    return saved && ['cpp', 'python', 'java'].includes(saved) ? saved : 'cpp';
+  };
+
+  const [language, setLanguage] = useState(getInitialLanguage);
   const [code, setCode] = useState('');
   
   // Execution states
@@ -31,7 +34,7 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
       const res = await api.getQuestionById(questionId);
       if (res.question) {
         setQuestion(res.question);
-        const preferred = localStorage.getItem('preferred_coding_language') || 'cpp';
+        const preferred = getInitialLanguage();
         setLanguage(preferred);
         const initialCode = res.question.starterCode?.[preferred] || getBoilerplate(preferred);
         setCode(initialCode);

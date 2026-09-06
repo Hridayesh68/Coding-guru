@@ -7,23 +7,22 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
   const [difficulty, setDifficulty] = useState('Easy');
   const [tags, setTags] = useState('Array, Math');
   const [description, setDescription] = useState('');
-  const [jsCode, setJsCode] = useState('function solve(input) {\n  // Write solution here\n  return input;\n}');
-  const [pyCode, setPyCode] = useState('def solve(input):\n    # Write solution here\n    return input');
-  const [cppCode, setCppCode] = useState('#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    \n}');
-  const [javaCode, setJavaCode] = useState('import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // Write solution here\n    }\n}');
-  const [activeCodeLang, setActiveCodeLang] = useState('javascript');
+  const [cppCode, setCppCode] = useState('#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    // Read input (integer or string)\n\n    return 0;\n}');
+  const [javaCode, setJavaCode] = useState('import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // Read input (integer or string)\n    }\n}');
+  const [pyCode, setPyCode] = useState('import sys\n\ndef solve():\n    lines = sys.stdin.read().split()\n    if not lines:\n        return\n    # Read input (integer or string)\n\nif __name__ == "__main__":\n    solve()');
+  const [activeCodeLang, setActiveCodeLang] = useState('cpp');
   
   // AI Generation Mode State
   const [aiIdea, setAiIdea] = useState('');
   const [aiGenerating, setAiGenerating] = useState(false);
   const [aiNotice, setAiNotice] = useState(null);
   
-  // Exactly 10 test cases
+  // Exactly 10 test cases (Inputs must always be integer or string)
   const [testCases, setTestCases] = useState(() =>
     Array.from({ length: 10 }, (_, i) => ({
       id: i + 1,
-      input: `{"val": ${i + 1}}`,
-      expectedOutput: `${i + 1}`,
+      input: `${(i + 1) * 2}`,
+      expectedOutput: `${(i + 1) * 4}`,
       isHidden: i >= 4,
       explanation: `Test case ${i + 1}`
     }))
@@ -54,10 +53,9 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
         if (q.description) setDescription(q.description);
         
         if (q.starterCode) {
-          if (q.starterCode.javascript) setJsCode(q.starterCode.javascript);
-          if (q.starterCode.python) setPyCode(q.starterCode.python);
           if (q.starterCode.cpp) setCppCode(q.starterCode.cpp);
           if (q.starterCode.java) setJavaCode(q.starterCode.java);
+          if (q.starterCode.python) setPyCode(q.starterCode.python);
         }
 
         if (Array.isArray(q.testCases) && q.testCases.length === 10) {
@@ -82,10 +80,9 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
       setDifficulty(questionToEdit.difficulty || 'Easy');
       setTags(Array.isArray(questionToEdit.tags) ? questionToEdit.tags.join(', ') : (questionToEdit.tags || ''));
       setDescription(questionToEdit.description || '');
-      setJsCode(questionToEdit.starterCode?.javascript || '');
-      setPyCode(questionToEdit.starterCode?.python || '');
-      setCppCode(questionToEdit.starterCode?.cpp || '#include <bits/stdc++.h>\nusing namespace std;\n\nint main(){\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    \n}');
-      setJavaCode(questionToEdit.starterCode?.java || 'import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Write solution\n    }\n}');
+      setCppCode(questionToEdit.starterCode?.cpp || '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(NULL);\n    return 0;\n}');
+      setJavaCode(questionToEdit.starterCode?.java || 'import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n    }\n}');
+      setPyCode(questionToEdit.starterCode?.python || 'import sys\n\ndef solve():\n    pass\n\nif __name__ == "__main__":\n    solve()');
       if (Array.isArray(questionToEdit.testCases) && questionToEdit.testCases.length === 10) {
         setTestCases(questionToEdit.testCases);
       }
@@ -104,8 +101,8 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
     setTestCases(
       Array.from({ length: 10 }, (_, i) => ({
         id: i + 1,
-        input: `{"input": ${i + 1}}`,
-        expectedOutput: `${(i + 1) * 2}`,
+        input: `${(i + 1) * 5}`,
+        expectedOutput: `${(i + 1) * 10}`,
         isHidden: i >= 3,
         explanation: `Evaluation case #${i + 1}`
       }))
@@ -138,10 +135,9 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
         tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
         description,
         starterCode: {
-          javascript: jsCode,
-          python: pyCode,
           cpp: cppCode,
-          java: javaCode
+          java: javaCode,
+          python: pyCode
         },
         testCases
       };
@@ -367,16 +363,15 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
             />
           </div>
 
-          {/* Starter Code Section with 4 Languages */}
+          {/* Starter Code Section with 3 Languages */}
           <div style={{ marginBottom: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <label className="form-label" style={{ marginBottom: 0 }}>Starter Code Templates (4 Languages)</label>
+              <label className="form-label" style={{ marginBottom: 0 }}>Starter Code Templates (C++, Java, Python)</label>
               <div style={{ display: 'flex', gap: '0.35rem' }}>
                 {[
-                  { id: 'javascript', label: 'JavaScript' },
-                  { id: 'python', label: 'Python' },
                   { id: 'cpp', label: 'C++' },
-                  { id: 'java', label: 'Java' }
+                  { id: 'java', label: 'Java' },
+                  { id: 'python', label: 'Python' }
                 ].map((lang) => (
                   <button
                     key={lang.id}
@@ -402,20 +397,17 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
             <textarea
               rows={5}
               value={
-                activeCodeLang === 'javascript'
-                  ? jsCode
-                  : activeCodeLang === 'python'
-                  ? pyCode
-                  : activeCodeLang === 'cpp'
+                activeCodeLang === 'cpp'
                   ? cppCode
-                  : javaCode
+                  : activeCodeLang === 'java'
+                  ? javaCode
+                  : pyCode
               }
               onChange={(e) => {
                 const val = e.target.value;
-                if (activeCodeLang === 'javascript') setJsCode(val);
-                else if (activeCodeLang === 'python') setPyCode(val);
-                else if (activeCodeLang === 'cpp') setCppCode(val);
-                else setJavaCode(val);
+                if (activeCodeLang === 'cpp') setCppCode(val);
+                else if (activeCodeLang === 'java') setJavaCode(val);
+                else setPyCode(val);
               }}
               className="form-textarea"
               style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}
@@ -437,7 +429,7 @@ export default function AdminQuestionModal({ isOpen, onClose, questionToEdit, on
                   <span className="badge badge-tag" style={{ background: '#2563eb', color: '#fff' }}>10 Required</span>
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                  Input must be valid JSON matching function parameters (e.g. {`{"nums": [2, 7], "target": 9}`}).
+                  Input must always be integer or string (e.g. space-separated numbers or single strings). Never JSON.
                 </div>
               </div>
 
