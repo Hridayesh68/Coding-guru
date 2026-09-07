@@ -204,3 +204,146 @@ export const getAdminStats = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Failed to retrieve admin stats.' });
   }
 };
+
+// Daily Progress Heatmap: questions solved and added per day
+export const getDailyHeatmap = async (req, res) => {
+  try {
+    const questions = await db.getQuestions();
+    const submissions = await db.getAllSubmissions();
+    const userId = req.user?.id;
+
+    // Solved submissions for user (or platform-wide if guest)
+    const userAcceptedSubmissions = userId
+      ? submissions.filter((s) => s.userId === userId && s.status === 'Accepted')
+      : submissions.filter((s) => s.status === 'Accepted');
+
+    // Aggregate by date (YYYY-MM-DD)
+    const heatmapData = {};
+
+    // Map questions added
+    questions.forEach((q) => {
+      if (!q.createdAt) return;
+      const dateKey = q.createdAt.slice(0, 10);
+      if (!heatmapData[dateKey]) {
+        heatmapData[dateKey] = {
+          date: dateKey,
+          solvedCount: 0,
+          addedCount: 0,
+          totalCount: 0,
+          questionsAdded: [],
+          questionsSolved: []
+        };
+      }
+      heatmapData[dateKey].addedCount += 1;
+      heatmapData[dateKey].totalCount += 1;
+      heatmapData[dateKey].questionsAdded.push({
+        id: q.id,
+        title: q.title,
+        difficulty: q.difficulty,
+        time: q.createdAt
+      });
+    });
+
+    // Map questions solved
+    userAcceptedSubmissions.forEach((s) => {
+      if (!s.createdAt) return;
+      const dateKey = s.createdAt.slice(0, 10);
+      if (!heatmapData[dateKey]) {
+        heatmapData[dateKey] = {
+          date: dateKey,
+          solvedCount: 0,
+          addedCount: 0,
+          totalCount: 0,
+          questionsAdded: [],
+          questionsSolved: []
+        };
+      }
+      heatmapData[dateKey].solvedCount += 1;
+      heatmapData[dateKey].totalCount += 1;
+      heatmapData[dateKey].questionsSolved.push({
+        id: s.questionId,
+        title: s.questionTitle || 'Problem',
+        language: s.language,
+        time: s.createdAt
+      });
+    });
+
+    // Compute streaks
+    const sortedDates = Object.keys(heatmapData).sort();
+    let currentStreak = 0;
+    let longestStreak = 0;
+    let tempStreak = 0;
+
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const yesterdayDate = new Date();
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterdayStr = yesterdayDate.toISOString().slice(0, 10);
+
+    let checkDate = new Date();
+    let isCurrentActive = true;
+    while (isCurrentActive) {
+      const dateStr = checkDate.toISOString().slice(0, 10);
+      const dayRecord = heatmapData[dateStr];
+      if (dayRecord && (dayRecord.solvedCount > 0 || dayRecord.addedCount > 0)) {
+        currentStreak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        if (currentStreak === 0 && dateStr === todayStr) {
+          checkDate.setDate(checkDate.getDate() - 1);
+          const yRecord = heatmapData[yesterdayStr];
+          if (yRecord && (yRecord.solvedCount > 0 || yRecord.addedCount > 0)) {
+            continue;
+          }
+        }
+        isCurrentActive = false;
+      }
+    }
+
+    let prevDate = null;
+    sortedDates.forEach((dateStr) => {
+      const dayRecord = heatmapData[dateStr];
+      if (dayRecord.solvedCount > 0 || dayRecord.addedCount > 0) {
+        if (!prevDate) {
+          tempStreak = 1;
+        } else {
+          const diffMs = new Date(dateStr) - new Date(prevDate);
+          const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+          if (diffDays === 1) {
+            tempStreak++;
+          } else {
+            tempStreak = 1;
+          }
+        }
+        prevDate = dateStr;
+        if (tempStreak > longestStreak) {
+          longestStreak = tempStreak;
+        }
+      }
+    });
+
+    if (currentStreak > longestStreak) {
+      longestStreak = currentStreak;
+    }
+
+    const totalSolved = userAcceptedSubmissions.length;
+    const totalAdded = questions.length;
+    const activeDays = Object.values(heatmapData).filter((d) => d.solvedCount > 0 || d.addedCount > 0).length;
+
+    return res.json({
+      success: true,
+      heatmap: heatmapData,
+      stats: {
+        totalSolved,
+        totalAdded,
+        activeDays,
+        currentStreak,
+        longestStreak,
+        isUserSpecific: Boolean(userId)
+      }
+    });
+  } catch (error) {
+    console.error('Heatmap analytics error:', error);
+    return res.status(500).json({ success: false, message: 'Failed to generate heatmap analytics.' });
+  }
+};
+

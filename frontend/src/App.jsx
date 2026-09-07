@@ -20,9 +20,13 @@ export default function App() {
   // User state
   const [currentUser, setCurrentUser] = useState(getUser());
 
-  // Palette State (#5E3122 vs #165823)
+  // Palette State: Earth (Dark) vs Light
   const [currentPalette, setCurrentPalette] = useState(() => {
-    const saved = localStorage.getItem('app_palette') || 'earth';
+    let saved = localStorage.getItem('app_palette') || 'earth';
+    if (saved === 'emerald') {
+      saved = 'earth';
+      localStorage.setItem('app_palette', 'earth');
+    }
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('data-palette', saved);
     }
@@ -34,7 +38,11 @@ export default function App() {
       setCurrentUser(getUser());
     };
     const syncPalette = () => {
-      const p = localStorage.getItem('app_palette') || 'earth';
+      let p = localStorage.getItem('app_palette') || 'earth';
+      if (p === 'emerald') {
+        p = 'earth';
+        localStorage.setItem('app_palette', 'earth');
+      }
       setCurrentPalette(p);
       document.documentElement.setAttribute('data-palette', p);
     };

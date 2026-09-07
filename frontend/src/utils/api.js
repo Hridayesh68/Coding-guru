@@ -59,6 +59,7 @@ export const api = {
   deleteQuestion: (id) =>
     request(`/questions/${id}`, { method: 'DELETE' }),
   getAdminStats: () => request('/questions/analytics/admin'),
+  getDailyHeatmap: () => request('/questions/analytics/heatmap'),
 
   // Execution & Submissions
   runCode: ({ code, language, questionId, customTestCases }) =>

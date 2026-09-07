@@ -5,7 +5,8 @@ import {
   createQuestion,
   updateQuestion,
   deleteQuestion,
-  getAdminStats
+  getAdminStats,
+  getDailyHeatmap
 } from '../controller/questionController.js';
 import { verifyToken, requireAdmin } from '../middleware/authMiddleware.js';
 
@@ -22,6 +23,7 @@ const optionalVerifyToken = (req, res, next) => {
 
 // Public / User question routes
 router.get('/', optionalVerifyToken, getAllQuestions);
+router.get('/analytics/heatmap', optionalVerifyToken, getDailyHeatmap);
 router.get('/analytics/admin', verifyToken, requireAdmin, getAdminStats);
 router.get('/:id', optionalVerifyToken, getQuestionById);
 

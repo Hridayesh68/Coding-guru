@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, CheckCircle2, FileText, History, Code2, AlertCircle, Clock, Sparkles } from 'lucide-react';
 import CodeEditor from '../components/CodeEditor';
 import TestCaseRunner from '../components/TestCaseRunner';
@@ -19,6 +19,8 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
 
   const [language, setLanguage] = useState(getInitialLanguage);
   const [code, setCode] = useState('');
+  const [saveStatus, setSaveStatus] = useState('saved'); // 'saved' | 'saving'
+  const saveTimeoutRef = useRef(null);
   
   // Execution states
   const [isRunning, setIsRunning] = useState(false);
@@ -27,7 +29,7 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
   const [submissionVerdict, setSubmissionVerdict] = useState(null);
   const [submissions, setSubmissions] = useState([]);
 
-  // Fetch question details
+  // Fetch question details & restore saved code draft if available
   const loadQuestion = async () => {
     try {
       setLoading(true);
@@ -36,8 +38,18 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
         setQuestion(res.question);
         const preferred = getInitialLanguage();
         setLanguage(preferred);
-        const initialCode = res.question.starterCode?.[preferred] || getBoilerplate(preferred);
-        setCode(initialCode);
+
+        // Check if there is a saved draft in localStorage for this question & language
+        const draftKey = `coding_guru_code_${questionId}_${preferred}`;
+        const savedDraft = localStorage.getItem(draftKey);
+        if (savedDraft !== null && savedDraft.trim().length > 0) {
+          setCode(savedDraft);
+          setSaveStatus('saved');
+        } else {
+          const initialCode = res.question.starterCode?.[preferred] || getBoilerplate(preferred);
+          setCode(initialCode);
+          setSaveStatus('saved');
+        }
       }
     } catch (err) {
       console.error('Failed to load question:', err);
@@ -60,25 +72,62 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
   useEffect(() => {
     loadQuestion();
     loadSubmissions();
+    return () => {
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    };
   }, [questionId]);
 
-  // Handle language switch and save preference across problems
+  // Handle code edit with auto-save to localStorage
+  const handleCodeChange = (newCode) => {
+    setCode(newCode);
+    setSaveStatus('saving');
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+    saveTimeoutRef.current = setTimeout(() => {
+      localStorage.setItem(`coding_guru_code_${questionId}_${language}`, newCode);
+      setSaveStatus('saved');
+    }, 400);
+  };
+
+  // Manual save code button handler
+  const handleSaveCode = () => {
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+    localStorage.setItem(`coding_guru_code_${questionId}_${language}`, code);
+    setSaveStatus('saved');
+  };
+
+  // Handle language switch and restore language-specific draft if exists
   const handleLanguageChange = (newLang) => {
+    // Save current code first before switching
+    if (code) {
+      localStorage.setItem(`coding_guru_code_${questionId}_${language}`, code);
+    }
+
     setLanguage(newLang);
     localStorage.setItem('preferred_coding_language', newLang);
-    if (question?.starterCode?.[newLang]) {
+
+    const draftKey = `coding_guru_code_${questionId}_${newLang}`;
+    const savedDraft = localStorage.getItem(draftKey);
+    if (savedDraft !== null && savedDraft.trim().length > 0) {
+      setCode(savedDraft);
+    } else if (question?.starterCode?.[newLang]) {
       setCode(question.starterCode[newLang]);
     } else {
       setCode(getBoilerplate(newLang));
     }
+    setSaveStatus('saved');
   };
 
-  // Reset to starter code or boilerplate
+  // Reset to starter code or boilerplate with confirmation
   const handleReset = () => {
-    if (question?.starterCode?.[language]) {
-      setCode(question.starterCode[language]);
-    } else {
-      setCode(getBoilerplate(language));
+    if (window.confirm('Reset code to starter template? This will discard your saved changes for this language.')) {
+      localStorage.removeItem(`coding_guru_code_${questionId}_${language}`);
+      const defaultCode = question?.starterCode?.[language] || getBoilerplate(language);
+      setCode(defaultCode);
+      setSaveStatus('saved');
     }
   };
 
@@ -330,10 +379,12 @@ export default function ProblemDetailPage({ questionId, onBack, onOpenAuth }) {
           {/* Code Editor */}
           <CodeEditor
             code={code}
-            onChange={setCode}
+            onChange={handleCodeChange}
             language={language}
             onLanguageChange={handleLanguageChange}
             onReset={handleReset}
+            onSave={handleSaveCode}
+            saveStatus={saveStatus}
           />
 
           {/* 10 Test Cases Runner */}

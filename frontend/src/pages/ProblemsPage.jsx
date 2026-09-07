@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, CheckCircle2, ChevronRight, Code2, Sparkles, Filter, Shield, Award, Terminal } from 'lucide-react';
 import { api } from '../utils/api';
 import { isAuthenticated, isAdmin } from '../utils/auth';
+import ActivityHeatmap from '../components/ActivityHeatmap';
 
 const CATEGORIES = [
   { id: 'All', label: 'All Categories', match: () => true },
@@ -84,7 +85,7 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
           Rigorous 10 Test Cases Per Problem
         </div>
 
-        <h1 style={{
+        <h1 className="hero-title-gradient" style={{
           fontSize: '2.8rem',
           fontWeight: 800,
           letterSpacing: '-0.03em',
@@ -118,7 +119,7 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
         }}>
           <div className="glass-panel" style={{ padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Total Questions</div>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#fbf7f4' }}>{questions.length}</div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--text-primary)' }}>{questions.length}</div>
           </div>
           <div className="glass-panel" style={{ padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Evaluation Engine</div>
@@ -134,6 +135,9 @@ export default function ProblemsPage({ onSelectQuestion, onOpenAuth }) {
           </div>
         </div>
       </section>
+
+      {/* Daily Progress Heatmap */}
+      <ActivityHeatmap refreshTrigger={questions.length + solvedCount} />
 
       {/* Filter & Search Bar */}
       <div className="glass-panel" style={{ padding: '1rem 1.25rem', marginBottom: '1rem', display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', justifyContent: 'space-between' }}>

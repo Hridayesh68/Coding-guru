@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
-import { RotateCcw, Copy, Check, Code, Sparkles, Sun, Moon } from 'lucide-react';
+import { RotateCcw, Copy, Check, Code, Sparkles, Sun, Moon, Save, CheckCircle2, Clock } from 'lucide-react';
 
-export default function CodeEditor({ code, onChange, language, onLanguageChange, onReset }) {
+export default function CodeEditor({
+  code,
+  onChange,
+  language,
+  onLanguageChange,
+  onReset,
+  onSave,
+  saveStatus = 'saved'
+}) {
   const [copied, setCopied] = useState(false);
+  const [justSaved, setJustSaved] = useState(false);
   const [editorTheme, setEditorTheme] = useState('vs-dark'); // 'vs-dark' | 'light'
 
   // Map our language key to Monaco editor language
@@ -19,6 +28,12 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleManualSave = () => {
+    if (onSave) onSave();
+    setJustSaved(true);
+    setTimeout(() => setJustSaved(false), 2000);
+  };
+
   const toggleTheme = () => {
     setEditorTheme((prev) => (prev === 'vs-dark' ? 'light' : 'vs-dark'));
   };
@@ -26,8 +41,8 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
   return (
     <div className="editor-container" style={{ border: '1px solid var(--border-subtle)', borderRadius: '12px', overflow: 'hidden' }}>
       {/* Editor Top Bar */}
-      <div className="editor-header" style={{ padding: '0.65rem 1rem', background: '#17100d', borderBottom: '1px solid var(--border-subtle)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+      <div className="editor-header" style={{ padding: '0.65rem 1rem', background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-subtle)', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.6rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#c76f51', fontSize: '0.825rem', fontWeight: 600 }}>
             <Code size={16} />
             Language:
@@ -39,8 +54,8 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
             style={{
               padding: '0.3rem 0.75rem',
               fontSize: '0.8rem',
-              background: '#0e0907',
-              borderColor: '#3d2820',
+              background: 'var(--bg-primary)',
+              borderColor: 'var(--border-subtle)',
               width: 'auto',
               borderRadius: '6px',
               fontWeight: 600,
@@ -58,7 +73,53 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+          {/* Save Status Badge */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              padding: '0.25rem 0.6rem',
+              borderRadius: '6px',
+              background: saveStatus === 'saving' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.12)',
+              color: saveStatus === 'saving' ? '#fbbf24' : '#10b981',
+              border: saveStatus === 'saving' ? '1px solid rgba(245, 158, 11, 0.3)' : '1px solid rgba(16, 185, 129, 0.25)'
+            }}
+            title="Changes are continuously auto-saved and restored upon refresh"
+          >
+            {saveStatus === 'saving' ? (
+              <>
+                <Clock size={12} />
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle2 size={12} />
+                <span>Auto-saved</span>
+              </>
+            )}
+          </div>
+
+          {/* Explicit Save Code Button */}
+          <button
+            onClick={handleManualSave}
+            className="btn btn-secondary"
+            style={{
+              padding: '0.3rem 0.65rem',
+              fontSize: '0.75rem',
+              gap: '0.35rem',
+              color: justSaved ? '#10b981' : 'var(--text-primary)',
+              borderColor: justSaved ? 'rgba(16, 185, 129, 0.4)' : 'var(--border-subtle)'
+            }}
+            title="Manually save code draft (persists across refreshes)"
+          >
+            {justSaved ? <Check size={13} color="#10b981" /> : <Save size={13} />}
+            <span>{justSaved ? 'Saved!' : 'Save Code'}</span>
+          </button>
+
           {/* Light / Dark Mode Toggle Button */}
           <button
             onClick={toggleTheme}
@@ -68,9 +129,9 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
               fontSize: '0.75rem',
               background: editorTheme === 'light' ? '#ffffff' : '#261a15',
               color: editorTheme === 'light' ? '#17100d' : '#fbf7f4',
-              borderColor: editorTheme === 'light' ? '#c76f51' : '#3d2820'
+              borderColor: editorTheme === 'light' ? '#c76f51' : 'var(--border-subtle)'
             }}
-            title={editorTheme === 'vs-dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            title={editorTheme === 'vs-dark' ? 'Switch editor to Light' : 'Switch editor to Dark'}
           >
             {editorTheme === 'vs-dark' ? (
               <>
@@ -88,17 +149,18 @@ export default function CodeEditor({ code, onChange, language, onLanguageChange,
           <button
             onClick={handleCopy}
             className="btn btn-secondary"
-            style={{ padding: '0.3rem 0.7rem', fontSize: '0.75rem' }}
+            style={{ padding: '0.3rem 0.65rem', fontSize: '0.75rem' }}
             title="Copy Code"
           >
             {copied ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
             {copied ? 'Copied' : 'Copy'}
           </button>
+
           <button
             onClick={onReset}
             className="btn btn-secondary"
-            style={{ padding: '0.3rem 0.7rem', fontSize: '0.75rem' }}
-            title="Reset to starter template"
+            style={{ padding: '0.3rem 0.65rem', fontSize: '0.75rem' }}
+            title="Reset code template"
           >
             <RotateCcw size={14} />
             Reset

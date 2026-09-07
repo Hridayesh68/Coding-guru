@@ -1,5 +1,5 @@
 import React from 'react';
-import { Terminal, Shield, User, LogOut, Code2, PlusCircle, Sparkles } from 'lucide-react';
+import { Terminal, Shield, User, LogOut, Code2, PlusCircle, Sparkles, Sun, Moon } from 'lucide-react';
 import { getUser, isAdmin, clearAuth } from '../utils/auth';
 
 export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQuestion }) {
@@ -82,7 +82,7 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
 
         {/* Right Section / Palette Switcher & Auth */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {/* Palette Selector: #5E3122 (Earth) vs #165823 (Emerald) */}
+          {/* Palette Selector: Earth vs Light */}
           <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '20px', padding: '0.2rem' }}>
             <button
               type="button"
@@ -94,41 +94,44 @@ export default function Navbar({ currentView, setView, onOpenAuth, onOpenCreateQ
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.3rem',
-                padding: '0.25rem 0.6rem',
+                gap: '0.35rem',
+                padding: '0.3rem 0.65rem',
                 borderRadius: '16px',
-                fontSize: '0.72rem',
+                fontSize: '0.75rem',
                 fontWeight: 600,
-                background: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') !== 'emerald') ? '#5E3122' : 'transparent',
-                color: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') !== 'emerald') ? '#ffffff' : 'var(--text-muted)'
+                background: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') !== 'light') ? '#5E3122' : 'transparent',
+                color: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') !== 'light') ? '#ffffff' : 'var(--text-muted)',
+                transition: 'all 0.2s ease'
               }}
-              title="Warm Chestnut Palette (#5E3122)"
+              title="Earth Dark Palette"
             >
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#5E3122', border: '1px solid #c76f51' }} />
-              #5E3122
+              <Moon size={12} color={(typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') !== 'light') ? '#ffffff' : 'var(--text-muted)'} />
+              Earth
             </button>
             <button
               type="button"
               onClick={() => {
-                document.documentElement.setAttribute('data-palette', 'emerald');
-                localStorage.setItem('app_palette', 'emerald');
+                document.documentElement.setAttribute('data-palette', 'light');
+                localStorage.setItem('app_palette', 'light');
                 window.dispatchEvent(new Event('palette-changed'));
               }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.3rem',
-                padding: '0.25rem 0.6rem',
+                gap: '0.35rem',
+                padding: '0.3rem 0.65rem',
                 borderRadius: '16px',
-                fontSize: '0.72rem',
+                fontSize: '0.75rem',
                 fontWeight: 600,
-                background: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') === 'emerald') ? '#165823' : 'transparent',
-                color: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') === 'emerald') ? '#ffffff' : 'var(--text-muted)'
+                background: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') === 'light') ? '#ffffff' : 'transparent',
+                color: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') === 'light') ? '#5E3122' : 'var(--text-muted)',
+                boxShadow: (typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') === 'light') ? '0 1px 4px rgba(0,0,0,0.12)' : 'none',
+                transition: 'all 0.2s ease'
               }}
-              title="Vibrant Emerald Palette (#165823)"
+              title="Light Mode Palette"
             >
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#165823', border: '1px solid #34d399' }} />
-              #165823
+              <Sun size={12} color={(typeof document !== 'undefined' && document.documentElement.getAttribute('data-palette') === 'light') ? '#f59e0b' : 'var(--text-muted)'} />
+              Light
             </button>
           </div>
 
